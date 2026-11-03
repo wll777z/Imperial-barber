@@ -1,10 +1,303 @@
-'use client';
-import {useEffect,useState} from 'react';
-import {Plus,Trash2} from 'lucide-react';
-import {useAdmin,Feedback,SaveButton} from './ui';
-import {adminRequest} from './client';
-import type {RawProfessional} from './workspace';
-type Hours={weekday:number;start:string;end:string};type Block={startsAt:string;endsAt:string;reason:string};
-const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-export default function Availability(){const{data:pros,error,loading}=useAdmin<RawProfessional[]>('professionals');const[id,setId]=useState('');return <><label className="field narrow-field">Profissional<select value={id} onChange={e=>setId(e.target.value)}><option value="">Selecione um profissional</option>{pros?.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label><Feedback error={error} loading={loading}/>{id?<ScheduleEditor key={id} id={id}/>:<section className="admin-card empty-state">Selecione quem você deseja organizar. Os horários são exibidos no fuso de Brasília.</section>}</>;}
-function ScheduleEditor({id}:{id:string}){const{data,error,loading,reload}=useAdmin<{hours:Hours[];blocks:Block[]}>(`schedule?professionalId=${id}`);const[hours,setHours]=useState<Hours[]>([]);const[blocks,setBlocks]=useState<Block[]>([]);const[busy,setBusy]=useState(false);const[message,setMessage]=useState('');const[saveError,setSaveError]=useState('');useEffect(()=>{if(data){setHours(data.hours);setBlocks(data.blocks);}},[data]);const local=(iso:string)=>{if(!iso)return'';const p=new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(iso));return p.replace(' ','T');};return <form onSubmit={async e=>{e.preventDefault();setBusy(true);setSaveError('');setMessage('');try{await adminRequest('schedule',{professionalId:id,hours,blocks});setMessage('Disponibilidade atualizada.');reload();}catch(e){setSaveError(e instanceof Error?e.message:'Falha ao atualizar.');}finally{setBusy(false);}}}><Feedback error={error} loading={loading}/><section className="admin-card"><div className="card-heading"><h2>Jornada semanal</h2><button type="button" className="text-button" onClick={()=>setHours([...hours,{weekday:1,start:'09:00',end:'20:00'}])}><Plus size={15}/>Adicionar faixa</button></div><p className="field-caption">Para intervalos, use duas faixas no mesmo dia, por exemplo 09h–12h e 13h–20h. Dias sem faixa são dias de folga.</p>{!hours.length&&<p className="empty-state">Nenhuma faixa configurada.</p>}{hours.map((h,i)=><div className="schedule-row" key={i}><label className="field">Dia<select value={h.weekday} onChange={e=>setHours(hours.map((v,k)=>k===i?{...v,weekday:Number(e.target.value)}:v))}>{days.map((d,n)=><option key={d} value={n}>{d}</option>)}</select></label><label className="field">Início<input required type="time" value={h.start} onChange={e=>setHours(hours.map((v,k)=>k===i?{...v,start:e.target.value}:v))}/></label><label className="field">Fim<input required type="time" value={h.end} onChange={e=>setHours(hours.map((v,k)=>k===i?{...v,end:e.target.value}:v))}/></label><button type="button" className="icon-button" aria-label="Remover faixa" onClick={()=>setHours(hours.filter((_,k)=>i!==k))}><Trash2 size={17}/></button></div>)}{!hours.length&&<button type="button" className="button button-muted" onClick={()=>setHours([1,2,3,4,5,6].map(weekday=>({weekday,start:'09:00',end:'20:00'})))}>Preencher segunda a sábado, 09h–20h</button>}</section><section className="admin-card"><div className="card-heading"><h2>Folgas e bloqueios por data</h2><button type="button" className="text-button" onClick={()=>setBlocks([...blocks,{startsAt:'',endsAt:'',reason:''}])}><Plus size={15}/>Adicionar bloqueio</button></div>{!blocks.length&&<p className="empty-state">Sem bloqueios cadastrados.</p>}{blocks.map((b,i)=><div className="block-row" key={i}><div className="form-grid"><label className="field">Início · Brasília<input required type="datetime-local" value={local(b.startsAt)} onChange={e=>{if(e.target.value)setBlocks(blocks.map((v,k)=>k===i?{...v,startsAt:new Date(e.target.value+':00-03:00').toISOString()}:v));}}/></label><label className="field">Fim · Brasília<input required type="datetime-local" value={local(b.endsAt)} onChange={e=>{if(e.target.value)setBlocks(blocks.map((v,k)=>k===i?{...v,endsAt:new Date(e.target.value+':00-03:00').toISOString()}:v));}}/></label></div><label className="field">Motivo<input maxLength={200} value={b.reason} onChange={e=>setBlocks(blocks.map((v,k)=>k===i?{...v,reason:e.target.value}:v))}/></label><button type="button" className="text-button" onClick={()=>setBlocks(blocks.filter((_,k)=>k!==i))}><Trash2 size={15}/>Remover bloqueio</button></div>)}</section><p className="notice">Mudanças que conflitem com reservas já confirmadas serão rejeitadas. Remarque ou cancele essas reservas primeiro.</p><Feedback error={saveError}/>{message&&<p role="status" className="success-message">{message}</p>}<SaveButton busy={busy}/></form>;}
+"use client";
+import { useEffect, useState } from "react";
+import { Plus, Trash2 } from "lucide-react";
+import { useAdmin, Feedback, SaveButton } from "./ui";
+import { adminRequest } from "./client";
+import type { RawProfessional } from "./workspace";
+type Hours = { weekday: number; start: string; end: string };
+type Block = { startsAt: string; endsAt: string; reason: string };
+const days = [
+  "Domingo",
+  "Segunda",
+  "Terça",
+  "Quarta",
+  "Quinta",
+  "Sexta",
+  "Sábado",
+];
+export default function Availability() {
+  const {
+    data: pros,
+    error,
+    loading,
+  } = useAdmin<RawProfessional[]>("professionals");
+  const [id, setId] = useState("");
+  return (
+    <>
+      <label className="field narrow-field">
+        Profissional
+        <select value={id} onChange={(e) => setId(e.target.value)}>
+          <option value="">Selecione um profissional</option>
+          {pros?.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <Feedback error={error} loading={loading} />
+      {id ? (
+        <ScheduleEditor key={id} id={id} />
+      ) : (
+        <section className="admin-card empty-state">
+          Selecione quem você deseja organizar. Os horários são exibidos no fuso
+          de Brasília.
+        </section>
+      )}
+    </>
+  );
+}
+function ScheduleEditor({ id }: { id: string }) {
+  const { data, error, loading, reload } = useAdmin<{
+    hours: Hours[];
+    blocks: Block[];
+  }>(`schedule?professionalId=${id}`);
+  const [hours, setHours] = useState<Hours[]>([]);
+  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const [saveError, setSaveError] = useState("");
+  useEffect(() => {
+    if (data) {
+      setHours(data.hours);
+      setBlocks(data.blocks);
+    }
+  }, [data]);
+  const local = (iso: string) => {
+    if (!iso) return "";
+    const p = new Intl.DateTimeFormat("sv-SE", {
+      timeZone: "America/Sao_Paulo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).format(new Date(iso));
+    return p.replace(" ", "T");
+  };
+  return (
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        setSaveError("");
+        setMessage("");
+        try {
+          await adminRequest("schedule", { professionalId: id, hours, blocks });
+          setMessage("Disponibilidade atualizada.");
+          reload();
+        } catch (e) {
+          setSaveError(e instanceof Error ? e.message : "Falha ao atualizar.");
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      <Feedback error={error} loading={loading} />
+      <section className="admin-card">
+        <div className="card-heading">
+          <h2>Jornada semanal</h2>
+          <button
+            type="button"
+            className="text-button"
+            onClick={() =>
+              setHours([...hours, { weekday: 1, start: "09:00", end: "20:00" }])
+            }
+          >
+            <Plus size={15} />
+            Adicionar faixa
+          </button>
+        </div>
+        <p className="field-caption">
+          Para intervalos, use duas faixas no mesmo dia, por exemplo 09h–12h e
+          13h–20h. Dias sem faixa são dias de folga.
+        </p>
+        {!hours.length && (
+          <p className="empty-state">Nenhuma faixa configurada.</p>
+        )}
+        {hours.map((h, i) => (
+          <div className="schedule-row" key={i}>
+            <label className="field">
+              Dia
+              <select
+                value={h.weekday}
+                onChange={(e) =>
+                  setHours(
+                    hours.map((v, k) =>
+                      k === i ? { ...v, weekday: Number(e.target.value) } : v,
+                    ),
+                  )
+                }
+              >
+                {days.map((d, n) => (
+                  <option key={d} value={n}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="field">
+              Início
+              <input
+                required
+                type="time"
+                value={h.start}
+                onChange={(e) =>
+                  setHours(
+                    hours.map((v, k) =>
+                      k === i ? { ...v, start: e.target.value } : v,
+                    ),
+                  )
+                }
+              />
+            </label>
+            <label className="field">
+              Fim
+              <input
+                required
+                type="time"
+                value={h.end}
+                onChange={(e) =>
+                  setHours(
+                    hours.map((v, k) =>
+                      k === i ? { ...v, end: e.target.value } : v,
+                    ),
+                  )
+                }
+              />
+            </label>
+            <button
+              type="button"
+              className="icon-button"
+              aria-label="Remover faixa"
+              onClick={() => setHours(hours.filter((_, k) => i !== k))}
+            >
+              <Trash2 size={17} />
+            </button>
+          </div>
+        ))}
+        {!hours.length && (
+          <button
+            type="button"
+            className="button button-muted"
+            onClick={() =>
+              setHours(
+                [1, 2, 3, 4, 5, 6].map((weekday) => ({
+                  weekday,
+                  start: "09:00",
+                  end: "20:00",
+                })),
+              )
+            }
+          >
+            Preencher segunda a sábado, 09h–20h
+          </button>
+        )}
+      </section>
+      <section className="admin-card">
+        <div className="card-heading">
+          <h2>Folgas e bloqueios por data</h2>
+          <button
+            type="button"
+            className="text-button"
+            onClick={() =>
+              setBlocks([...blocks, { startsAt: "", endsAt: "", reason: "" }])
+            }
+          >
+            <Plus size={15} />
+            Adicionar bloqueio
+          </button>
+        </div>
+        {!blocks.length && (
+          <p className="empty-state">Sem bloqueios cadastrados.</p>
+        )}
+        {blocks.map((b, i) => (
+          <div className="block-row" key={i}>
+            <div className="form-grid">
+              <label className="field">
+                Início · Brasília
+                <input
+                  required
+                  type="datetime-local"
+                  value={local(b.startsAt)}
+                  onChange={(e) => {
+                    if (e.target.value)
+                      setBlocks(
+                        blocks.map((v, k) =>
+                          k === i
+                            ? {
+                                ...v,
+                                startsAt: new Date(
+                                  e.target.value + ":00-03:00",
+                                ).toISOString(),
+                              }
+                            : v,
+                        ),
+                      );
+                  }}
+                />
+              </label>
+              <label className="field">
+                Fim · Brasília
+                <input
+                  required
+                  type="datetime-local"
+                  value={local(b.endsAt)}
+                  onChange={(e) => {
+                    if (e.target.value)
+                      setBlocks(
+                        blocks.map((v, k) =>
+                          k === i
+                            ? {
+                                ...v,
+                                endsAt: new Date(
+                                  e.target.value + ":00-03:00",
+                                ).toISOString(),
+                              }
+                            : v,
+                        ),
+                      );
+                  }}
+                />
+              </label>
+            </div>
+            <label className="field">
+              Motivo
+              <input
+                maxLength={200}
+                value={b.reason}
+                onChange={(e) =>
+                  setBlocks(
+                    blocks.map((v, k) =>
+                      k === i ? { ...v, reason: e.target.value } : v,
+                    ),
+                  )
+                }
+              />
+            </label>
+            <button
+              type="button"
+              className="text-button"
+              onClick={() => setBlocks(blocks.filter((_, k) => k !== i))}
+            >
+              <Trash2 size={15} />
+              Remover bloqueio
+            </button>
+          </div>
+        ))}
+      </section>
+      <p className="notice">
+        Mudanças que conflitem com reservas já confirmadas serão rejeitadas.
+        Remarque ou cancele essas reservas primeiro.
+      </p>
+      <Feedback error={saveError} />
+      {message && (
+        <p role="status" className="success-message">
+          {message}
+        </p>
+      )}
+      <SaveButton busy={busy} />
+    </form>
+  );
+}

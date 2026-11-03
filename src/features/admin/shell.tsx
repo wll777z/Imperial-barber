@@ -1,7 +1,104 @@
-'use client';
-import {useState} from 'react';
-import {usePathname} from 'next/navigation';
-import {LayoutDashboard,CalendarDays,Users,Scissors,UserRound,Clock,Images,Settings,LogOut,ArrowUpRight,Menu,X} from 'lucide-react';
-import Brand from '@/components/site/brand';
-const links=[['/admin','Painel',LayoutDashboard],['/admin/agenda','Agendamentos',CalendarDays],['/admin/clientes','Clientes',Users],['/admin/servicos','Serviços',Scissors],['/admin/equipe','Profissionais',UserRound],['/admin/disponibilidade','Disponibilidade',Clock],['/admin/conteudo','Conteúdo do site',Images],['/admin/configuracoes','Configurações',Settings]] as const;
-export default function Shell({children,email}:{children:React.ReactNode;email:string}){const path=usePathname();const[open,setOpen]=useState(false);const[error,setError]=useState('');return <div className="admin-shell"><aside className={`admin-sidebar ${open?'open':''}`}><Brand/><button className="icon-button sidebar-close" onClick={()=>setOpen(false)} aria-label="Fechar menu"><X/></button><p className="sidebar-label">SEU NEGÓCIO, NO CONTROLE</p><nav aria-label="Painel administrativo">{links.map(([href,label,Icon])=><a className={path===href?'active':''} key={href} href={href}><Icon size={17}/>{label}</a>)}</nav><div className="sidebar-bottom"><a href="/" target="_blank" rel="noopener noreferrer">Ver site <ArrowUpRight size={16}/></a><button onClick={async()=>{try{const r=await fetch('/api/auth/logout',{method:'POST'});if(!r.ok)throw Error();location.assign('/admin/login');}catch{setError('Não foi possível sair. Tente novamente.');}}}><LogOut size={16}/>Sair da conta</button><small role="alert">{error}</small></div></aside><div className="admin-main"><header className="admin-top"><button className="icon-button admin-menu" aria-label="Abrir menu" onClick={()=>setOpen(true)}><Menu/></button><span>Imperial Barber <small> / Gestão</small></span><div><div className="admin-avatar">IB</div><span>{email}<small>Administrador</small></span></div></header><div className="admin-content">{children}</div></div></div>;}
+"use client";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  CalendarDays,
+  Users,
+  Scissors,
+  UserRound,
+  Clock,
+  Images,
+  Settings,
+  LogOut,
+  ArrowUpRight,
+  Menu,
+  X,
+} from "lucide-react";
+import Brand from "@/components/site/brand";
+const links = [
+  ["/admin", "Painel", LayoutDashboard],
+  ["/admin/agenda", "Agendamentos", CalendarDays],
+  ["/admin/clientes", "Clientes", Users],
+  ["/admin/servicos", "Serviços", Scissors],
+  ["/admin/equipe", "Profissionais", UserRound],
+  ["/admin/disponibilidade", "Disponibilidade", Clock],
+  ["/admin/conteudo", "Conteúdo do site", Images],
+  ["/admin/configuracoes", "Configurações", Settings],
+] as const;
+export default function Shell({
+  children,
+  email,
+}: {
+  children: React.ReactNode;
+  email: string;
+}) {
+  const path = usePathname();
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
+  return (
+    <div className="admin-shell">
+      <aside className={`admin-sidebar ${open ? "open" : ""}`}>
+        <Brand />
+        <button
+          className="icon-button sidebar-close"
+          onClick={() => setOpen(false)}
+          aria-label="Fechar menu"
+        >
+          <X />
+        </button>
+        <p className="sidebar-label">SEU NEGÓCIO, NO CONTROLE</p>
+        <nav aria-label="Painel administrativo">
+          {links.map(([href, label, Icon]) => (
+            <a className={path === href ? "active" : ""} key={href} href={href}>
+              <Icon size={17} />
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          <a href="/" target="_blank" rel="noopener noreferrer">
+            Ver site <ArrowUpRight size={16} />
+          </a>
+          <button
+            onClick={async () => {
+              try {
+                const r = await fetch("/api/auth/logout", { method: "POST" });
+                if (!r.ok) throw Error();
+                location.assign("/admin/login");
+              } catch {
+                setError("Não foi possível sair. Tente novamente.");
+              }
+            }}
+          >
+            <LogOut size={16} />
+            Sair da conta
+          </button>
+          <small role="alert">{error}</small>
+        </div>
+      </aside>
+      <div className="admin-main">
+        <header className="admin-top">
+          <button
+            className="icon-button admin-menu"
+            aria-label="Abrir menu"
+            onClick={() => setOpen(true)}
+          >
+            <Menu />
+          </button>
+          <span>
+            Imperial Barber <small> / Gestão</small>
+          </span>
+          <div>
+            <div className="admin-avatar">IB</div>
+            <span>
+              {email}
+              <small>Administrador</small>
+            </span>
+          </div>
+        </header>
+        <div className="admin-content">{children}</div>
+      </div>
+    </div>
+  );
+}

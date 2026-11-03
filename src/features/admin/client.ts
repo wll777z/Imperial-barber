@@ -1,2 +1,26 @@
-import type {ApiResult} from '@/lib/domain';
-export async function adminRequest<T>(resource:string,body?:unknown):Promise<T>{const r=await fetch('/api/admin/'+resource,{method:body===undefined?'GET':'POST',headers:body instanceof FormData?undefined:{'Content-Type':'application/json'},body:body===undefined?undefined:body instanceof FormData?body:JSON.stringify(body)});if(r.status===401){location.assign('/admin/login');throw Error('Sua sessão expirou. Entre novamente.');}const v:ApiResult<T>=await r.json();if(!v.ok)throw Error(v.error.message);return v.data;}
+import type { ApiResult } from "@/lib/domain";
+export async function adminRequest<T>(
+  resource: string,
+  body?: unknown,
+): Promise<T> {
+  const r = await fetch("/api/admin/" + resource, {
+    method: body === undefined ? "GET" : "POST",
+    headers:
+      body instanceof FormData
+        ? undefined
+        : { "Content-Type": "application/json" },
+    body:
+      body === undefined
+        ? undefined
+        : body instanceof FormData
+          ? body
+          : JSON.stringify(body),
+  });
+  if (r.status === 401) {
+    location.assign("/admin/login");
+    throw Error("Sua sessão expirou. Entre novamente.");
+  }
+  const v: ApiResult<T> = await r.json();
+  if (!v.ok) throw Error(v.error.message);
+  return v.data;
+}

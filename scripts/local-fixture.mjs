@@ -1,11 +1,29 @@
-import {createClient} from '@supabase/supabase-js';
-import {randomBytes} from 'node:crypto';
-import {writeFileSync,mkdirSync} from 'node:fs';
-process.loadEnvFile('.env.local');
-const url=process.env.NEXT_PUBLIC_SUPABASE_URL;if(!/^http:\/\/(127\.0\.0\.1|localhost):/.test(url||''))throw Error('Fixture is restricted to local Supabase');
-const db=createClient(url,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false}});
-const email=`test-${randomBytes(6).toString('hex')}@imperial.local`,password=randomBytes(24).toString('hex');
-const u=await db.auth.admin.createUser({email,password,email_confirm:true});if(u.error)throw u.error;
-const v=await db.from('admin_users').insert({user_id:u.data.user.id});if(v.error)throw v.error;
-mkdirSync('.superpowers/local',{recursive:true});writeFileSync('.superpowers/local/admin.json',JSON.stringify({email,password,userId:u.data.user.id}),{mode:0o600});
-console.log('Local test administrator created (credentials omitted). No production account was created.');
+import { createClient } from "@supabase/supabase-js";
+import { randomBytes } from "node:crypto";
+import { writeFileSync, mkdirSync } from "node:fs";
+process.loadEnvFile(".env.local");
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+if (!/^http:\/\/(127\.0\.0\.1|localhost):/.test(url || ""))
+  throw Error("Fixture is restricted to local Supabase");
+const db = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+  auth: { persistSession: false },
+});
+const email = `test-${randomBytes(6).toString("hex")}@imperial.local`,
+  password = randomBytes(24).toString("hex");
+const u = await db.auth.admin.createUser({
+  email,
+  password,
+  email_confirm: true,
+});
+if (u.error) throw u.error;
+const v = await db.from("admin_users").insert({ user_id: u.data.user.id });
+if (v.error) throw v.error;
+mkdirSync(".superpowers/local", { recursive: true });
+writeFileSync(
+  ".superpowers/local/admin.json",
+  JSON.stringify({ email, password, userId: u.data.user.id }),
+  { mode: 0o600 },
+);
+console.log(
+  "Local test administrator created (credentials omitted). No production account was created.",
+);
