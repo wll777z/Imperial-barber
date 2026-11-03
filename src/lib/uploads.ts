@@ -1,0 +1,2 @@
+import {ApiError} from './api';
+export function validateUpload(b:Uint8Array,mime:string){if(!b.length||b.length>5242880)throw new ApiError('VALIDATION');let type='',extension='';if([137,80,78,71,13,10,26,10].every((v,i)=>b[i]===v)){type='image/png';extension='png';}else if(b[0]===255&&b[1]===216&&b[2]===255){type='image/jpeg';extension='jpg';}else if(new TextDecoder().decode(b.slice(0,4))==='RIFF'&&new TextDecoder().decode(b.slice(8,12))==='WEBP'){type='image/webp';extension='webp';}if(!type||mime!==type)throw new ApiError('VALIDATION');return{mime:type,extension};}

@@ -1,0 +1,2 @@
+-- No administrator, password or fictitious customer is seeded.
+-- An authorized administrator can install the initial service catalog in the panel.
