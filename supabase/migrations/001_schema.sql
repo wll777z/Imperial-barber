@@ -1,0 +1,17 @@
+create extension if not exists btree_gist;
+create table site_settings(id boolean primary key default true check(id),content jsonb not null default '{}'::jsonb);
+insert into site_settings(content) values ('{"bookingEnabled":false,"stepMinutes":10,"leadMinutes":30,"horizonDays":60,"cancelHours":2}');
+create table services(id uuid primary key default gen_random_uuid(),name text not null,description text not null default '',price_cents int not null check(price_cents>=0),duration_minutes int not null check(duration_minutes between 10 and 480),image_url text,active boolean not null default true,sort_order int not null default 0);
+create table professionals(id uuid primary key default gen_random_uuid(),name text not null,specialty text not null default '',image_url text,active boolean not null default true,sort_order int not null default 0);
+create table professional_services(professional_id uuid references professionals(id),service_id uuid references services(id),primary key(professional_id,service_id));
+create table working_hours(id uuid primary key default gen_random_uuid(),professional_id uuid not null references professionals(id),weekday int not null check(weekday between 0 and 6),opens time not null,closes time not null,check(opens<closes));
+create table schedule_blocks(id uuid primary key default gen_random_uuid(),professional_id uuid not null references professionals(id),starts_at timestamptz not null,ends_at timestamptz not null,reason text not null default '',check(starts_at<ends_at));
+create table customers(id uuid primary key default gen_random_uuid(),name text not null,phone text not null,email text,created_at timestamptz not null default now());
+create table admin_users(user_id uuid primary key references auth.users(id));
+create table bookings(id uuid primary key default gen_random_uuid(),code text not null unique default upper(substr(replace(gen_random_uuid()::text,'-',''),1,12)),service_id uuid not null references services(id),professional_id uuid not null references professionals(id),customer_id uuid not null references customers(id),service_name text not null,professional_name text not null,price_cents int not null check(price_cents>=0),duration_minutes int not null check(duration_minutes>0),starts_at timestamptz not null,ends_at timestamptz not null,status text not null default 'confirmed' check(status in ('confirmed','cancelled','completed','no_show')),token_hash text not null check(length(token_hash)=64),created_at timestamptz not null default now(),check(starts_at<ends_at),exclude using gist(professional_id with =,tstzrange(starts_at,ends_at,'[)') with &&)where(status='confirmed'));
+create index bookings_token on bookings(token_hash);
+create index bookings_customer on bookings(customer_id);
+create index bookings_starts on bookings(starts_at);
+create table request_limits(key text primary key,window_start timestamptz not null default now(),hits int not null default 1);
+create function is_admin() returns boolean language sql stable security definer set search_path=public as $$select exists(select 1 from admin_users where user_id=auth.uid())$$;
+revoke all on function is_admin() from public;grant execute on function is_admin() to anon,authenticated,service_role;
