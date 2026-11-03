@@ -1,0 +1,10 @@
+import {z} from 'zod';
+const phone=z.string().transform(v=>v.replace(/\D/g,'')).pipe(z.string().min(10).max(15));
+export const customerSchema=z.object({name:z.string().trim().min(2).max(120),phone,email:z.union([z.email(),z.literal('')]).optional()}).strict();
+export const bookingSchema=z.object({serviceId:z.uuid(),professionalId:z.uuid().nullable(),startsAt:z.iso.datetime({offset:true}),customer:customerSchema,consent:z.literal(true)}).strict();
+export const manageSchema=z.object({token:z.string().regex(/^[a-f0-9]{64}$/),action:z.enum(['view','cancel','reschedule']),startsAt:z.iso.datetime({offset:true}).optional()}).strict().refine(v=>v.action!=='reschedule'||!!v.startsAt);
+export const slotSchema=z.object({serviceId:z.uuid(),professionalId:z.uuid().nullable(),date:z.iso.date()}).strict();
+export const imageUrlSchema=z.string().max(2000).refine(v=>!v||v.startsWith('/images/')||/^https:\/\//.test(v),'Use uma imagem local ou URL HTTPS.');
+export const serviceSchema=z.object({name:z.string().trim().min(2).max(100),description:z.string().max(500),priceCents:z.number().int().min(0).max(1000000),durationMinutes:z.number().int().min(10).max(480),imageUrl:imageUrlSchema.nullable(),active:z.boolean(),sortOrder:z.number().int().min(0)}).strict();
+export const professionalSchema=z.object({name:z.string().trim().min(2).max(100),specialty:z.string().max(200),imageUrl:imageUrlSchema.nullable(),active:z.boolean(),sortOrder:z.number().int().min(0),serviceIds:z.array(z.uuid()).max(100)}).strict();
+export const scheduleSchema=z.object({professionalId:z.uuid(),hours:z.array(z.object({weekday:z.number().int().min(0).max(6),start:z.string().regex(/^\d{2}:\d{2}$/),end:z.string().regex(/^\d{2}:\d{2}$/)}).strict()).max(28),blocks:z.array(z.object({startsAt:z.iso.datetime({offset:true}),endsAt:z.iso.datetime({offset:true}),reason:z.string().max(200)}).strict()).max(100)}).strict();
