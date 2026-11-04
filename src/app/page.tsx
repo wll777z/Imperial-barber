@@ -21,6 +21,8 @@ import { BookingLauncher } from "@/features/booking/wizard";
 import Header from "@/components/site/header";
 import Brand from "@/components/site/brand";
 import HeroVisual from "@/components/site/hero-visual";
+import WorkGallery from "@/components/site/work-gallery";
+import { workPhotos } from "@/lib/portfolio";
 export const dynamic = "force-dynamic";
 export default async function Home() {
   const c = await getPublicContent();
@@ -136,6 +138,11 @@ export default async function Home() {
             )}
           </div>
         </section>
+        <WorkGallery photos={workPhotos}>
+          <BookingLauncher content={c} className="button">
+            Agendar meu horário <ArrowUpRight size={18} />
+          </BookingLauncher>
+        </WorkGallery>
         <section className="booking-banner" id="agendamento">
           <div
             className="booking-banner-photo"

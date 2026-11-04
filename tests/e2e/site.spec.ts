@@ -1,4 +1,39 @@
 import { test, expect } from "@playwright/test";
+test("portfolio filters keep missing photos empty and booking accessible", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const gallery = page.getByRole("region", { name: "Nossos Trabalhos" });
+  await expect(gallery).toBeVisible();
+  for (const name of [
+    "Todos",
+    "Cortes",
+    "Cortes com Desenho",
+    "Luzes e Platinados",
+  ]) {
+    const filter = gallery.getByRole("button", { name, exact: true });
+    await filter.click();
+    await expect(filter).toHaveAttribute("aria-pressed", "true");
+    await expect(
+      gallery.getByText("Novas fotografias em breve."),
+    ).toBeVisible();
+    await expect(gallery.locator("img")).toHaveCount(0);
+  }
+  await gallery
+    .getByRole("button", { name: "Agendar meu horário", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.getByRole("button", { name: "Fechar agendamento" }).click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(
+    gallery.getByRole("button", { name: "Luzes e Platinados", exact: true }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});
 test("public site, mobile navigation and honest setup state", async ({
   page,
 }) => {
