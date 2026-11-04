@@ -202,6 +202,35 @@ select:focus-visible {
   max-height: 80px;
   object-fit: contain;
 }
+.brand-with-image img {
+  width: 104px;
+  height: 104px;
+  aspect-ratio: 1 / 1;
+  max-height: none;
+  mix-blend-mode: screen;
+}
+.brand-small.brand-with-image img {
+  width: 120px;
+  height: 120px;
+}
+.admin-sidebar .brand-with-image img {
+  width: 145px;
+  height: 145px;
+}
+.login-brand .brand-with-image img {
+  width: 260px;
+  height: 260px;
+}
+@media (max-width: 800px) {
+  .site-header .brand-with-image img {
+    width: 92px;
+    height: 92px;
+  }
+  .login-brand .brand-with-image img {
+    width: 130px;
+    height: 130px;
+  }
+}
 .nav {
   display: flex;
   gap: 30px;

@@ -53,7 +53,7 @@ export const defaultSettings: SiteSettings = {
   heroDescription:
     "Cortes modernos, barba impecável e uma experiência à altura do seu estilo.",
   heroImage: "/images/hero.jpg",
-  logoUrl: "",
+  logoUrl: "/images/imperial-j-crest.png",
   servicesTitle: "Serviços que valorizam o seu estilo",
   bookingTitle: "Seu tempo merece um cuidado imperial.",
   bookingDescription:

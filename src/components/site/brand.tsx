@@ -1,4 +1,3 @@
-import { Crown, Scissors } from "lucide-react";
 export default function Brand({
   small = false,
   logoUrl = "",
@@ -9,19 +8,15 @@ export default function Brand({
   return (
     <a
       href="/"
-      className={`brand ${small ? "brand-small" : ""}`}
+      className={`brand brand-with-image ${small ? "brand-small" : ""}`}
       aria-label="Imperial Barber — início"
     >
-      {logoUrl ? (
-        <img src={logoUrl} alt="Imperial Barber" />
-      ) : (
-        <>
-          <Crown strokeWidth={1.2} />
-          <strong>IMPERIAL</strong>
-          <span>— B A R B E R —</span>
-          <Scissors className="brand-scissors" strokeWidth={1} />
-        </>
-      )}
+      <img
+        src={logoUrl || "/images/imperial-j-crest.png"}
+        alt="Imperial Barber — brasão com J e coroa"
+        width={1254}
+        height={1254}
+      />
     </a>
   );
 }
