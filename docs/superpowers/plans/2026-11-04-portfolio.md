@@ -28,4 +28,6 @@
 
 **Fidelidade:** nenhum arquivo de generated_images foi usado como substituto dos trabalhos reais. A logo agora é o arquivo exato IMG_3863. Serviços sem fotografia e retratos de equipe sem foto real usam espaços neutros. Imagens personalizadas do CMS permanecem preservadas; apenas os dois caminhos antigos de fotos artificiais recebem tratamento de substituição.
 
+**Correção da abertura:** a logo original IMG_3863 é a imagem principal da página inicial. No computador fica em destaque ao lado do título; no celular, acima do texto. Usa contain e proporção preservada, com movimento suave e opção de pausa. Conteúdo local e padrão atualizados; galeria e agendamento conferidos em navegador, assim como logo completa e ausência de rolagem horizontal. Build passou.
+
 **Verificação:** 22 testes unitários, 4 E2E, typecheck e build passaram após integrar os originais. O E2E persistido usa as três fotos reais e verifica contagens por filtro, ampliação, Escape, foco, carregamento, celular e agendamento. Revisão independente sem problemas bloqueantes; enquadramento do banner e documentação foram ajustados. Banco local atualizado somente nos campos de mídia; nomes, preços, durações dos serviços e IDs de agendamentos conferidos antes/depois sem alterações. Publicação na hospedagem continua condicionada ao acesso de rede e à configuração do banco de produção.

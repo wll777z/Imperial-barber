@@ -11,7 +11,7 @@ Arquivos integrados:
 
 Recorte convencional com Sharp, sem preenchimento ou geração: x=0, y=354, largura=1242; altura=1516 para IMG_3860 e 1416 para IMG_3861/2. Exportação WebP de largura máxima 1200, quality=84, effort=6, sem ampliação. Arquivos: degrade-tradicional.webp, corte-com-desenho.webp e luzes-platinadas.webp. Barras e ícones do Instagram ficam fora desses limites; cabelo e pessoas permanecem fiéis ao original.
 
-A foto principal usa um segundo enquadramento de IMG_3860: x=0, y=880, largura=1242, altura=850, exportado como hero-degrade.webp pelo mesmo processo. Nenhum filtro de cor, retoque ou alteração de cabelo foi aplicado.
+A imagem principal da abertura é a logo original IMG_3863.png, conforme correção solicitada pelo usuário. O derivado hero-degrade.webp é um enquadramento adicional preservado de IMG_3860 (x=0, y=880, largura=1242, altura=850). Nenhum filtro de cor, retoque ou alteração de cabelo foi aplicado.
 
 Nas miniaturas, object-fit: cover privilegia o cabelo; a ampliação exibe a fotografia recortada completa com contain. Fotos de clientes não são retratos de profissionais nem demonstram serviços de barba ou infantis. Categorias sem fotografia permanecem sem imagem.
 

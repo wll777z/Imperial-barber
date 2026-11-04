@@ -1,7 +1,7 @@
 import type { Service } from "./domain";
 
 export const sitePhotos = {
-  hero: "/images/barbearia/hero-degrade.webp",
+  hero: "/images/barbearia/IMG_3863.png",
   fade: "/images/barbearia/degrade-tradicional.webp",
   design: "/images/barbearia/corte-com-desenho.webp",
   platinum: "/images/barbearia/luzes-platinadas.webp",

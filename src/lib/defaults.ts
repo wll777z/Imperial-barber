@@ -52,7 +52,7 @@ export const defaultSettings: SiteSettings = {
   heroTitle: "Mais que um corte, um estilo Imperial.",
   heroDescription:
     "Cortes modernos, barba impecável e uma experiência à altura do seu estilo.",
-  heroImage: "/images/barbearia/hero-degrade.webp",
+  heroImage: "/images/barbearia/IMG_3863.png",
   logoUrl: "/images/barbearia/IMG_3863.png",
   servicesTitle: "Serviços que valorizam o seu estilo",
   bookingTitle: "Seu tempo merece um cuidado imperial.",

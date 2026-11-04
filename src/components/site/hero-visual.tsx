@@ -3,17 +3,32 @@
 import { useState } from "react";
 import { Pause, Play } from "lucide-react";
 
-export default function HeroVisual({ image }: { image: string }) {
+export default function HeroVisual({
+  image,
+  logo = false,
+}: {
+  image: string;
+  logo?: boolean;
+}) {
   const [paused, setPaused] = useState(false);
-  const label = paused ? "Ativar animação da foto" : "Pausar animação da foto";
+  const subject = logo ? "logo" : "foto";
+  const label = paused
+    ? `Ativar animação da ${subject}`
+    : `Pausar animação da ${subject}`;
 
   return (
     <>
-      <div className={`hero-visual${paused ? " is-paused" : ""}`}>
+      <div
+        className={`hero-visual${logo ? " hero-visual-logo" : ""}${paused ? " is-paused" : ""}`}
+      >
         <img
-          className={`hero-photo${image === "/images/barbearia/hero-degrade.webp" ? " hero-photo-original" : ""}`}
+          className={`hero-photo${logo ? " hero-logo" : image === "/images/barbearia/hero-degrade.webp" ? " hero-photo-original" : ""}`}
           src={image}
-          alt="Cuidado e precisão no corte em uma barbearia premium"
+          alt={
+            logo
+              ? "Imperial Barber — brasão dourado com J"
+              : "Cuidado e precisão no corte em uma barbearia premium"
+          }
           fetchPriority="high"
         />
       </div>

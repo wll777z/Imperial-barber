@@ -28,13 +28,25 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const c = await getPublicContent();
   const s = c.settings;
+  const heroImage = [
+    "/images/barbearia/hero-degrade.webp",
+    "/images/barbearia/degrade-tradicional.webp",
+  ].includes(s.heroImage)
+    ? sitePhotos.hero
+    : publicPhoto(s.heroImage) || sitePhotos.hero;
+  const heroIsLogo =
+    heroImage === s.logoUrl ||
+    [sitePhotos.hero, "/images/imperial-j-crest.png"].includes(heroImage);
   const benefitIcons = [Scissors, Gem, CalendarDays, CreditCard, ShieldCheck];
   return (
     <>
       <Header content={c} />
       <main>
-        <section className="hero" id="inicio">
-          <HeroVisual image={publicPhoto(s.heroImage) || sitePhotos.hero} />
+        <section
+          className={`hero${heroIsLogo ? " hero-with-logo" : ""}`}
+          id="inicio"
+        >
+          <HeroVisual image={heroImage} logo={heroIsLogo} />
           <div className="hero-shade" />
           <div className="container hero-content">
             <p className="eyebrow">{s.eyebrow}</p>

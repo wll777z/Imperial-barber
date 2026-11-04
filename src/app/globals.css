@@ -2816,6 +2816,51 @@ footer {
 .preline {
   white-space: pre-line;
 }
+.hero-with-logo {
+  background: radial-gradient(ellipse at 78% 50%, #332915, #0a0c0b 65%);
+}
+.hero-visual-logo {
+  inset: 90px 0 0 42%;
+}
+.hero-photo.hero-logo {
+  object-fit: contain;
+  object-position: center;
+  transform-origin: center;
+  animation: imperial-crest 12s ease-in-out infinite alternate;
+}
+.hero-with-logo .hero-shade {
+  background: linear-gradient(90deg, #0a0c0bf0, #0a0c0b60 35%, transparent 58%);
+  pointer-events: none;
+}
+@keyframes imperial-crest {
+  from {
+    transform: translateY(6%) scale(1.55) rotateY(-2deg);
+  }
+  to {
+    transform: translateY(5%) scale(1.58) rotateY(2deg);
+  }
+}
+@media (max-width: 800px) {
+  .hero-visual-logo {
+    inset: 100px 0 auto;
+    height: 310px;
+  }
+  .hero-with-logo .hero-content {
+    padding-top: 390px;
+  }
+  .hero-with-logo .hero-shade {
+    background: none;
+  }
+  .hero-with-logo .hero-motion-toggle {
+    top: 145px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo.hero-logo {
+    animation: none;
+    transform: translateY(6%) scale(1.55);
+  }
+}
 .hero-photo.hero-photo-original {
   object-position: 50% 20%;
   transform-origin: 50% 45%;
