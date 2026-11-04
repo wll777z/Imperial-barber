@@ -2817,19 +2817,24 @@ footer {
   white-space: pre-line;
 }
 .hero-with-logo {
-  background: radial-gradient(ellipse at 78% 50%, #332915, #0a0c0b 65%);
+  background: #0a0c0b;
 }
 .hero-visual-logo {
   inset: 90px 0 0 42%;
+  background: transparent;
+}
+.hero-visual-logo::after {
+  display: none;
 }
 .hero-photo.hero-logo {
+  background: transparent;
   object-fit: contain;
   object-position: center;
   transform-origin: center;
   animation: imperial-crest 12s ease-in-out infinite alternate;
 }
 .hero-with-logo .hero-shade {
-  background: linear-gradient(90deg, #0a0c0bf0, #0a0c0b60 35%, transparent 58%);
+  background: none;
   pointer-events: none;
 }
 @keyframes imperial-crest {

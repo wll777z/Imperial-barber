@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Menu, X, Crown, ArrowUpRight } from "lucide-react";
-import Brand from "./brand";
 import { BookingLauncher } from "@/features/booking/wizard";
 import type { PublicContent } from "@/lib/domain";
 export default function Header({ content }: { content: PublicContent }) {
@@ -19,7 +18,6 @@ export default function Header({ content }: { content: PublicContent }) {
       </div>
       <header className="site-header">
         <div className="container header-inner">
-          <Brand logoUrl={content.settings.logoUrl} />
           <button
             className="menu-toggle"
             aria-label={open ? "Fechar menu" : "Abrir menu"}

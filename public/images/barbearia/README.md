@@ -15,4 +15,4 @@ A imagem principal da abertura é a logo original IMG_3863.png, conforme correç
 
 Nas miniaturas, object-fit: cover privilegia o cabelo; a ampliação exibe a fotografia recortada completa com contain. Fotos de clientes não são retratos de profissionais nem demonstram serviços de barba ou infantis. Categorias sem fotografia permanecem sem imagem.
 
-IMG_3863.png permanece sem alterações e é usada diretamente no cabeçalho, rodapé e painel. A cópia imperial-j-crest.png tem hash idêntico. A moldura CSS enquadra a área desenhada sem deformá-la. Favicons e apple-touch-icon são reduções convencionais da região quadrada de 640 px a partir de x=310, y=260, contendo brasão e nome completos.
+IMG_3863.png permanece sem alterações e é usada diretamente na abertura, rodapé e painel. O cabeçalho fica sem logo para evitar duplicação na abertura; a logo principal preserva a transparência original, sem brilho ou fundo próprio. A cópia imperial-j-crest.png tem hash idêntico. A moldura CSS enquadra a área desenhada sem deformá-la. Favicons e apple-touch-icon são reduções convencionais da região quadrada de 640 px a partir de x=310, y=260, contendo brasão e nome completos.
