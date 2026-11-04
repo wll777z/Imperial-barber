@@ -1,14 +1,18 @@
 # Fotografias originais — Imperial Barber
 
-Não usar imagens recriadas por IA como fotografias de trabalhos reais.
+Originais recebidos pelo GitHub no commit `ed47145`; preservados intactos nesta pasta.
 
-Arquivos aguardados:
+Arquivos integrados:
 
 - IMG_3860.png: degradê tradicional → Cortes.
 - IMG_3861.png: corte com desenho → Cortes e Cortes com Desenho.
 - IMG_3862.png: luzes platinadas → Luzes e Platinados.
 - IMG_3863.png: logo oficial, preservar sem alterações.
 
-Após receber os arquivos: remover apenas a interface do Instagram por recorte convencional; preservar cabelo e pessoas. Exportar as fotos recortadas como WebP de até 1200 px, sem ampliação. Inspecionar cada recorte antes de preencher `src/lib/portfolio.ts` com as URLs locais. Manter originais intactos fora da pasta pública. Não apontar para arquivos inexistentes.
+Recorte convencional com Sharp, sem preenchimento ou geração: x=0, y=354, largura=1242; altura=1516 para IMG_3860 e 1416 para IMG_3861/2. Exportação WebP de largura máxima 1200, quality=84, effort=6, sem ampliação. Arquivos: degrade-tradicional.webp, corte-com-desenho.webp e luzes-platinadas.webp. Barras e ícones do Instagram ficam fora desses limites; cabelo e pessoas permanecem fiéis ao original.
 
-Nas miniaturas, object-fit: cover e posicionamento central privilegiam o cabelo; a ampliação exibe a fotografia recortada completa com object-fit: contain. Categorias sem arquivo permanecem sem imagem. A logo recebida deve ser copiada intacta; favicon pode ser uma redução convencional da mesma imagem.
+A foto principal usa um segundo enquadramento de IMG_3860: x=0, y=880, largura=1242, altura=850, exportado como hero-degrade.webp pelo mesmo processo. Nenhum filtro de cor, retoque ou alteração de cabelo foi aplicado.
+
+Nas miniaturas, object-fit: cover privilegia o cabelo; a ampliação exibe a fotografia recortada completa com contain. Fotos de clientes não são retratos de profissionais nem demonstram serviços de barba ou infantis. Categorias sem fotografia permanecem sem imagem.
+
+IMG_3863.png permanece sem alterações e é usada diretamente no cabeçalho, rodapé e painel. A cópia imperial-j-crest.png tem hash idêntico. A moldura CSS enquadra a área desenhada sem deformá-la. Favicons e apple-touch-icon são reduções convencionais da região quadrada de 640 px a partir de x=310, y=260, contendo brasão e nome completos.

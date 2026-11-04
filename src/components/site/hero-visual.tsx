@@ -11,7 +11,7 @@ export default function HeroVisual({ image }: { image: string }) {
     <>
       <div className={`hero-visual${paused ? " is-paused" : ""}`}>
         <img
-          className="hero-photo"
+          className={`hero-photo${image === "/images/barbearia/hero-degrade.webp" ? " hero-photo-original" : ""}`}
           src={image}
           alt="Cuidado e precisão no corte em uma barbearia premium"
           fetchPriority="high"

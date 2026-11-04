@@ -109,7 +109,7 @@ export function ImageField({
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="/images/hero.jpg ou URL HTTPS"
+          placeholder="URL da fotografia"
         />
       </label>
       <label className="upload-button">

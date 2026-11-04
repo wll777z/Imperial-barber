@@ -6,6 +6,7 @@ import { formatMoney } from "@/lib/format";
 import { useAdmin, Feedback, EditorDialog, ImageField, SaveButton } from "./ui";
 import { adminRequest } from "./client";
 import type { RawService, RawProfessional } from "./workspace";
+import { publicPhoto, servicePhoto } from "@/lib/site-media";
 export default function Catalog({
   type,
 }: {
@@ -32,36 +33,42 @@ export default function Catalog({
       </div>
       <Feedback error={error || initError} loading={loading} />
       <div className="admin-catalog">
-        {data?.map((r) => (
-          <article
-            className={`admin-card catalog-card ${!r.active ? "archived" : ""}`}
-            key={r.id}
-          >
-            {r.image_url ? (
-              <img src={r.image_url} alt={r.name} />
-            ) : (
-              <div className="catalog-placeholder">
-                {type === "services" ? <Scissors /> : <UserRound />}
-              </div>
-            )}
-            <div>
-              <p className="eyebrow dark">
-                ORDEM {r.sort_order} · {r.active ? "ATIVO" : "ARQUIVADO"}
-              </p>
-              <h2>{r.name}</h2>
-              {"price_cents" in r ? (
-                <p>
-                  {formatMoney(r.price_cents)} · {r.duration_minutes} min
-                </p>
+        {data?.map((r) => {
+          const image =
+            type === "services"
+              ? servicePhoto({ name: r.name, imageUrl: r.image_url })
+              : publicPhoto(r.image_url);
+          return (
+            <article
+              className={`admin-card catalog-card ${!r.active ? "archived" : ""}`}
+              key={r.id}
+            >
+              {image ? (
+                <img src={image} alt={r.name} />
               ) : (
-                <p>{r.specialty}</p>
+                <div className="catalog-placeholder">
+                  {type === "services" ? <Scissors /> : <UserRound />}
+                </div>
               )}
-              <button className="text-button" onClick={() => setEditing(r)}>
-                Editar detalhes
-              </button>
-            </div>
-          </article>
-        ))}
+              <div>
+                <p className="eyebrow dark">
+                  ORDEM {r.sort_order} · {r.active ? "ATIVO" : "ARQUIVADO"}
+                </p>
+                <h2>{r.name}</h2>
+                {"price_cents" in r ? (
+                  <p>
+                    {formatMoney(r.price_cents)} · {r.duration_minutes} min
+                  </p>
+                ) : (
+                  <p>{r.specialty}</p>
+                )}
+                <button className="text-button" onClick={() => setEditing(r)}>
+                  Editar detalhes
+                </button>
+              </div>
+            </article>
+          );
+        })}
       </div>
       {data && !data.length && (
         <section className="admin-card empty-state">

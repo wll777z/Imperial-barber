@@ -17,15 +17,15 @@
 - [x] Verificar filtros, estado vazio, ausência de imagens quebradas, agendamento, responsividade; exercitar fotos ampliadas com imagem identificada como fixture apenas durante verificação local.
 - [x] Rodar testes existentes, typecheck, build e revisão.
 
-## Tarefa 2 — arquivos originais (bloqueada pelo envio)
+## Tarefa 2 — arquivos originais recebidos pelo GitHub
 
-- [ ] Obter os quatro arquivos originais acessíveis no ambiente. Os anexos da conversa são visíveis, mas não expõem arquivos locais ou identificadores de download.
-- [ ] Inspecionar dimensões e recortar apenas as barras do Instagram, sem alterar cabelo ou pessoas; gerar WebP otimizado em public/images/barbearia e preencher o catálogo.
-- [ ] Copiar IMG_3863.png intacto como logo oficial e criar favicon por redução convencional.
-- [ ] Verificar as quatro imagens no computador e celular; conferir categorias e cortes na ampliação.
+- [x] Obter os quatro arquivos originais acessíveis no ambiente: commit ed47145 enviado pelo usuário.
+- [x] Inspecionar dimensões e recortar apenas as barras do Instagram, sem alterar cabelo ou pessoas; gerar WebP otimizado em public/images/barbearia e preencher o catálogo.
+- [x] Copiar IMG_3863.png intacto como logo oficial e criar favicon por redução convencional.
+- [x] Verificar as quatro imagens no computador e celular; conferir categorias e cortes na ampliação.
 
 **Cuidados de revisão:** categoria Cortes inclui desenhos; Luzes não entra em Cortes; ausência de fotografia não autoriza substitutos; modal deve preservar foco, Escape e rolagem; nenhuma mudança de catálogo comercial.
 
-**Limitação registrada:** não usar os arquivos `generated_images` como se fossem recortes fiéis das fotografias. Manter a identidade já aplicada até receber o arquivo exato IMG_3863.
+**Fidelidade:** nenhum arquivo de generated_images foi usado como substituto dos trabalhos reais. A logo agora é o arquivo exato IMG_3863. Serviços sem fotografia e retratos de equipe sem foto real usam espaços neutros. Imagens personalizadas do CMS permanecem preservadas; apenas os dois caminhos antigos de fotos artificiais recebem tratamento de substituição.
 
-**Verificação da tarefa 1:** 22 testes unitários, 4 E2E, typecheck e build passaram. Dois cenários temporários com logo como fixture verificaram galeria preenchida em 390 e 1440 px (filtros, Enter, Escape, botão, fundo, foco e rolagem). Catálogo restaurado para `src: null` antes da compilação final. Revisão independente sem problemas materiais. Tarefa 2 continua bloqueada; nenhuma afirmação de recorte ou integração dos originais foi feita.
+**Verificação:** 22 testes unitários, 4 E2E, typecheck e build passaram após integrar os originais. O E2E persistido usa as três fotos reais e verifica contagens por filtro, ampliação, Escape, foco, carregamento, celular e agendamento. Revisão independente sem problemas bloqueantes; enquadramento do banner e documentação foram ajustados. Banco local atualizado somente nos campos de mídia; nomes, preços, durações dos serviços e IDs de agendamentos conferidos antes/depois sem alterações. Publicação na hospedagem continua condicionada ao acesso de rede e à configuração do banco de produção.

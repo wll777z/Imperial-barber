@@ -7,12 +7,12 @@ export const defaultSettings: SiteSettings = {
   servicesDescription:
     "Detalhes que fazem a diferença.\nUm cuidado que você sente.",
   bookingEyebrow: "SEU PRÓXIMO MOMENTO DE CUIDADO",
-  bookingImage: "/images/services.jpg",
+  bookingImage: "/images/barbearia/corte-com-desenho.webp",
   stepsEyebrow: "SIMPLES, DO INÍCIO AO FIM",
   stepsTitle: "Seu novo visual em poucos passos.",
   teamEyebrow: "MÃOS QUE ENTENDEM DE ESTILO",
   teamDescription: "Mais do que técnica.\nDedicação ao seu melhor visual.",
-  teamIntroImage: "/images/hero.jpg",
+  teamIntroImage: "/images/barbearia/corte-com-desenho.webp",
   teamIntroTitle: "O bom corte é só o começo.",
   teamIntroDescription:
     "Uma conversa, um cuidado, um momento só seu. Nossa equipe prepara cada detalhe para você sair com mais confiança.",
@@ -52,8 +52,8 @@ export const defaultSettings: SiteSettings = {
   heroTitle: "Mais que um corte, um estilo Imperial.",
   heroDescription:
     "Cortes modernos, barba impecável e uma experiência à altura do seu estilo.",
-  heroImage: "/images/hero.jpg",
-  logoUrl: "/images/imperial-j-crest.png",
+  heroImage: "/images/barbearia/hero-degrade.webp",
+  logoUrl: "/images/barbearia/IMG_3863.png",
   servicesTitle: "Serviços que valorizam o seu estilo",
   bookingTitle: "Seu tempo merece um cuidado imperial.",
   bookingDescription:
@@ -74,7 +74,7 @@ export const defaultSettings: SiteSettings = {
   instagram: "",
   facebook: "",
   hoursText: "Horários e endereço em breve.",
-  locationImage: "/images/hero.jpg",
+  locationImage: "",
   testimonials: [],
   showTeam: true,
   showTestimonials: false,
@@ -112,7 +112,7 @@ export const initialServices: Service[] = [
   description: String(description),
   priceCents: Number(priceCents),
   durationMinutes: Number(durationMinutes),
-  imageUrl: "/images/services.jpg",
+  imageUrl: i === 0 ? "/images/barbearia/degrade-tradicional.webp" : null,
   active: true,
   sortOrder: i,
 }));

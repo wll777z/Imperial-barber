@@ -1,11 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { filterWorkPhotos, workPhotos } from "@/lib/portfolio";
 
-// A logo is a loading fixture only; no artificial haircut photos are needed.
-const available = workPhotos.map((photo) => ({
-  ...photo,
-  src: "/images/imperial-j-crest.png",
-}));
+const available = workPhotos;
 
 describe("portfolio categories", () => {
   it("includes artistic cuts under Cortes without mixing in platinum work", () => {

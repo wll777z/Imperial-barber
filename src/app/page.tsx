@@ -23,6 +23,7 @@ import Brand from "@/components/site/brand";
 import HeroVisual from "@/components/site/hero-visual";
 import WorkGallery from "@/components/site/work-gallery";
 import { workPhotos } from "@/lib/portfolio";
+import { publicPhoto, servicePhoto, sitePhotos } from "@/lib/site-media";
 export const dynamic = "force-dynamic";
 export default async function Home() {
   const c = await getPublicContent();
@@ -33,7 +34,7 @@ export default async function Home() {
       <Header content={c} />
       <main>
         <section className="hero" id="inicio">
-          <HeroVisual image={s.heroImage} />
+          <HeroVisual image={publicPhoto(s.heroImage) || sitePhotos.hero} />
           <div className="hero-shade" />
           <div className="container hero-content">
             <p className="eyebrow">{s.eyebrow}</p>
@@ -105,9 +106,11 @@ export default async function Home() {
               {c.services.map((service, i) => (
                 <article className="service-card" key={service.id}>
                   <div
-                    className={`service-photo ${!service.imageUrl || service.imageUrl === "/images/services.jpg" ? `service-sheet service-photo-${i % 6}` : ""}`}
+                    className={`service-photo ${servicePhoto(service) ? "" : "photo-empty"}`}
                     style={{
-                      backgroundImage: `url("${service.imageUrl || "/images/services.jpg"}")`,
+                      backgroundImage: servicePhoto(service)
+                        ? `url("${servicePhoto(service)}")`
+                        : undefined,
                     }}
                   >
                     <span className="service-number">0{i + 1}</span>
@@ -147,12 +150,9 @@ export default async function Home() {
           <div
             className="booking-banner-photo"
             style={{
-              backgroundImage: `linear-gradient(90deg,#0c0e0b40,#10120ff2 46%,#10120f 65%),url("${s.bookingImage}")`,
-              backgroundSize:
-                s.bookingImage === "/images/services.jpg"
-                  ? "cover,300% 200%"
-                  : "cover,cover",
-              backgroundPosition: "center,right bottom",
+              backgroundImage: `linear-gradient(90deg,#0c0e0b40,#10120ff2 46%,#10120f 65%),url("${publicPhoto(s.bookingImage) || sitePhotos.design}")`,
+              backgroundSize: "cover,cover",
+              backgroundPosition: "center,center 40%",
             }}
           />
           <div className="container booking-banner-inner">
@@ -199,11 +199,18 @@ export default async function Home() {
                 <div className="team-grid">
                   {c.professionals.map((p) => (
                     <article className="team-card" key={p.id}>
-                      <img
-                        src={p.imageUrl || "/images/hero.jpg"}
-                        alt={p.name}
-                        loading="lazy"
-                      />
+                      {publicPhoto(p.imageUrl) ? (
+                        <img
+                          src={publicPhoto(p.imageUrl)!}
+                          alt={p.name}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div
+                          className="team-photo-empty photo-empty"
+                          aria-hidden="true"
+                        />
+                      )}
                       <div>
                         <h3>{p.name}</h3>
                         <p>{p.specialty}</p>
@@ -218,7 +225,9 @@ export default async function Home() {
                 <div className="team-intro">
                   <div
                     className="team-intro-image"
-                    style={{ backgroundImage: `url("${s.teamIntroImage}")` }}
+                    style={{
+                      backgroundImage: `url("${publicPhoto(s.teamIntroImage) || sitePhotos.design}")`,
+                    }}
                   />
                   <div>
                     <Scissors size={36} strokeWidth={1} />
@@ -258,7 +267,7 @@ export default async function Home() {
               </BookingLauncher>
             </div>
             <div className="contact-details">
-              {s.showLocation && s.address && s.locationImage && (
+              {s.showLocation && s.address && publicPhoto(s.locationImage) && (
                 <img
                   className="location-photo"
                   src={s.locationImage}

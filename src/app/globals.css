@@ -202,31 +202,41 @@ select:focus-visible {
   max-height: 80px;
   object-fit: contain;
 }
-.brand-with-image img {
+.brand .brand-logo-frame {
+  display: block;
   width: 104px;
   height: 104px;
   aspect-ratio: 1 / 1;
-  max-height: none;
-  mix-blend-mode: screen;
+  margin: 0;
+  overflow: hidden;
+  line-height: 0;
 }
-.brand-small.brand-with-image img {
+.brand-with-image img {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+}
+.brand-official img {
+  transform: translateY(6%) scale(1.8);
+}
+.brand-small .brand-logo-frame {
   width: 120px;
   height: 120px;
 }
-.admin-sidebar .brand-with-image img {
+.admin-sidebar .brand-logo-frame {
   width: 145px;
   height: 145px;
 }
-.login-brand .brand-with-image img {
+.login-brand .brand-logo-frame {
   width: 260px;
   height: 260px;
 }
 @media (max-width: 800px) {
-  .site-header .brand-with-image img {
+  .site-header .brand-logo-frame {
     width: 92px;
     height: 92px;
   }
-  .login-brand .brand-with-image img {
+  .login-brand .brand-logo-frame {
     width: 130px;
     height: 130px;
   }
@@ -2776,6 +2786,13 @@ footer {
   background-size: cover;
   background-position: center;
 }
+.photo-empty {
+  background: linear-gradient(145deg, #171a15, #29291e);
+}
+.team-photo-empty {
+  height: 220px;
+  border-radius: 5px 5px 0 0;
+}
 .service-sheet {
   background-size: 300% 200%;
   background-position: 0 0;
@@ -2798,4 +2815,14 @@ footer {
 
 .preline {
   white-space: pre-line;
+}
+.hero-photo.hero-photo-original {
+  object-position: 50% 20%;
+  transform-origin: 50% 45%;
+}
+@media (max-width: 800px) {
+  .hero-photo.hero-photo-original {
+    object-position: 48% 50%;
+    transform-origin: 48% 50%;
+  }
 }

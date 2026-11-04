@@ -1,30 +1,75 @@
 import { test, expect } from "@playwright/test";
-test("portfolio filters keep missing photos empty and booking accessible", async ({
+test("portfolio shows original work in the correct filters and keeps booking accessible", async ({
   page,
 }) => {
   await page.goto("/");
   const gallery = page.getByRole("region", { name: "Nossos Trabalhos" });
   await expect(gallery).toBeVisible();
-  for (const name of [
-    "Todos",
-    "Cortes",
-    "Cortes com Desenho",
-    "Luzes e Platinados",
-  ]) {
+  await expect(gallery.locator(".work-card")).toHaveCount(3);
+  await expect
+    .poll(() =>
+      gallery
+        .locator("img")
+        .evaluateAll((imgs) =>
+          imgs.every(
+            (img) =>
+              img instanceof HTMLImageElement &&
+              img.complete &&
+              img.naturalWidth > 0,
+          ),
+        ),
+    )
+    .toBe(true);
+  await gallery.screenshot({ path: "test-results/galeria-desktop.png" });
+  for (const [name, count] of [
+    ["Todos", 3],
+    ["Cortes", 2],
+    ["Cortes com Desenho", 1],
+    ["Luzes e Platinados", 1],
+  ] as const) {
     const filter = gallery.getByRole("button", { name, exact: true });
     await filter.click();
     await expect(filter).toHaveAttribute("aria-pressed", "true");
-    await expect(
-      gallery.getByText("Novas fotografias em breve."),
-    ).toBeVisible();
-    await expect(gallery.locator("img")).toHaveCount(0);
+    await expect(gallery.locator(".work-card")).toHaveCount(count);
   }
+  const opener = gallery.getByRole("button", {
+    name: "Ampliar Luzes platinadas",
+  });
+  await opener.click();
+  const photoDialog = page.getByRole("dialog", { name: "Luzes platinadas" });
+  await expect(photoDialog).toBeVisible();
+  await expect(photoDialog.locator("img")).toHaveAttribute(
+    "src",
+    "/images/barbearia/luzes-platinadas.webp",
+  );
+  await page.keyboard.press("Escape");
+  await expect(photoDialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+  expect(
+    await page.evaluate(() =>
+      [...document.images]
+        .filter((img) => !img.complete || img.naturalWidth === 0)
+        .map((img) => img.src),
+    ),
+  ).toEqual([]);
+  expect(await page.locator("main").innerHTML()).not.toMatch(
+    /\/images\/(hero|services)\.jpg/,
+  );
   await gallery
     .getByRole("button", { name: "Agendar meu horário", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("button", { name: "Fechar agendamento" }).click();
   await page.setViewportSize({ width: 390, height: 844 });
+  await gallery.getByRole("button", { name: "Todos", exact: true }).click();
+  await gallery.screenshot({ path: "test-results/galeria-mobile.png" });
+  await gallery
+    .getByRole("button", { name: "Ampliar Corte com desenho" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Corte com desenho" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Fechar fotografia" }).click();
   await expect(
     gallery.getByRole("button", { name: "Luzes e Platinados", exact: true }),
   ).toBeVisible();

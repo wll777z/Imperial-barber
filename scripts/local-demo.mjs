@@ -41,7 +41,7 @@ const rows = [
   description,
   price_cents,
   duration_minutes,
-  image_url: "/images/services.jpg",
+  image_url: i === 0 ? "/images/barbearia/degrade-tradicional.webp" : null,
   active: true,
   sort_order: i,
 }));
@@ -52,7 +52,7 @@ await check(
     id: pid,
     name: "Profissional de demonstração",
     specialty: "Agenda de exemplo · não representa equipe real",
-    image_url: "/images/hero.jpg",
+    image_url: null,
     active: true,
     sort_order: 0,
   }),
@@ -86,8 +86,8 @@ await check(
       content: {
         ...r.content,
         bookingEnabled: true,
-        bookingImage: "/images/services.jpg",
-        teamIntroImage: "/images/hero.jpg",
+        bookingImage: "/images/barbearia/corte-com-desenho.webp",
+        teamIntroImage: "/images/barbearia/corte-com-desenho.webp",
         stepsTitle: "Seu novo visual em poucos passos.",
         steps: [
           {

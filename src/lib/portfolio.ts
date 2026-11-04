@@ -17,8 +17,7 @@ export const workFilters: { id: WorkFilter; label: string }[] = [
   { id: "luzes", label: "Luzes e Platinados" },
 ];
 
-// Fill src only after importing and cropping the corresponding original file.
-// An unavailable photo must never fall back to generated or unrelated imagery.
+// Conventional crops of the supplied originals. Never substitute unrelated photos.
 export const workPhotos: WorkPhoto[] = [
   {
     id: "degrade-tradicional",
@@ -27,7 +26,7 @@ export const workPhotos: WorkPhoto[] = [
     description:
       "Corte masculino com degradê bem executado e acabamento natural.",
     category: "cortes",
-    src: null,
+    src: "/images/barbearia/degrade-tradicional.webp",
   },
   {
     id: "corte-com-desenho",
@@ -36,7 +35,7 @@ export const workPhotos: WorkPhoto[] = [
     description:
       "Corte masculino com degradê e desenhos artísticos nas laterais.",
     category: "desenhos",
-    src: null,
+    src: "/images/barbearia/corte-com-desenho.webp",
   },
   {
     id: "luzes-platinadas",
@@ -45,7 +44,7 @@ export const workPhotos: WorkPhoto[] = [
     description:
       "Cabelo masculino cacheado com luzes platinadas e degradê nas laterais.",
     category: "luzes",
-    src: null,
+    src: "/images/barbearia/luzes-platinadas.webp",
   },
 ];
 
