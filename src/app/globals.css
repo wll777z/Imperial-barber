@@ -242,6 +242,12 @@ select:focus-visible {
   display: flex;
   align-items: center;
 }
+.hero-visual {
+  position: absolute;
+  inset: 0;
+  perspective: 1400px;
+  overflow: hidden;
+}
 .hero-photo {
   position: absolute;
   inset: 0;
@@ -249,6 +255,64 @@ select:focus-visible {
   height: 100%;
   object-fit: cover;
   object-position: 62% 40%;
+  transform-origin: 65% 45%;
+  animation: imperial-camera 12s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: -15%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 76% 28%,
+    #edbf681a 0%,
+    #edbf6808 26%,
+    transparent 56%
+  );
+  animation: imperial-light 12s ease-in-out infinite alternate;
+}
+.hero-visual.is-paused .hero-photo,
+.hero-visual.is-paused::after {
+  animation-play-state: paused;
+}
+.hero-motion-toggle {
+  position: absolute;
+  z-index: 3;
+  right: 48px;
+  bottom: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e0bd7766;
+  border-radius: 50%;
+  color: #f4d38b;
+  background: #10130dd9;
+}
+.hero-motion-toggle:hover {
+  background: #30291de8;
+}
+@keyframes imperial-camera {
+  from {
+    transform: translate3d(-0.6%, 0.3%, 0) scale(1.07) rotateY(-2deg)
+      rotateX(0.5deg);
+  }
+  to {
+    transform: translate3d(0.8%, -0.4%, 22px) scale(1.105) rotateY(1.4deg)
+      rotateX(-0.4deg);
+  }
+}
+@keyframes imperial-light {
+  from {
+    opacity: 0.45;
+    transform: translate3d(-3%, 1%, 0);
+  }
+  to {
+    opacity: 0.9;
+    transform: translate3d(3%, -1%, 0);
+  }
 }
 .hero-shade {
   position: absolute;
@@ -1299,6 +1363,13 @@ footer {
   }
   .hero-photo {
     object-position: 66% 20%;
+    transform-origin: 66% 30%;
+    animation-duration: 15s;
+  }
+  .hero-motion-toggle {
+    top: 145px;
+    right: 20px;
+    bottom: auto;
   }
   .hero-shade {
     background: linear-gradient(
@@ -1512,6 +1583,14 @@ footer {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-photo {
+    transform: none;
+    will-change: auto;
+  }
+  .hero-visual::after,
+  .hero-motion-toggle {
+    display: none;
+  }
   html {
     scroll-behavior: auto;
   }

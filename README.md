@@ -20,6 +20,7 @@ Para produção: `npm run build` e `npm start`. Veja [publicação e operação]
 ## O que está incluído
 
 - Site com identidade Imperial, hero, benefícios, serviços, equipe, depoimentos opcionais, localização e contatos.
+- Foto principal com efeito de profundidade 3D e movimento de câmera em CSS, controle de pausa e respeito à preferência por movimento reduzido. A imagem continua editável pelo painel; não requer vídeo ou biblioteca 3D.
 - Agendamento em quatro etapas: serviço, profissional, data/hora e confirmação. O servidor valida novamente a disponibilidade, sem confiar no preço ou duração enviados pelo navegador.
 - Link privado para consultar, cancelar e remarcar a reserva. Guarde o link: não há envio automático de mensagens.
 - Login administrativo, resumo com métricas reais, agenda, criação manual, status, clientes/histórico, serviços, equipe, jornadas, pausas, bloqueios, fotos e conteúdo editável.

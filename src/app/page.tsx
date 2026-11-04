@@ -20,6 +20,7 @@ import { formatMoney } from "@/lib/format";
 import { BookingLauncher } from "@/features/booking/wizard";
 import Header from "@/components/site/header";
 import Brand from "@/components/site/brand";
+import HeroVisual from "@/components/site/hero-visual";
 export const dynamic = "force-dynamic";
 export default async function Home() {
   const c = await getPublicContent();
@@ -30,12 +31,7 @@ export default async function Home() {
       <Header content={c} />
       <main>
         <section className="hero" id="inicio">
-          <img
-            className="hero-photo"
-            src={s.heroImage}
-            alt="Cuidado e precisão no corte em uma barbearia premium"
-            fetchPriority="high"
-          />
+          <HeroVisual image={s.heroImage} />
           <div className="hero-shade" />
           <div className="container hero-content">
             <p className="eyebrow">{s.eyebrow}</p>
