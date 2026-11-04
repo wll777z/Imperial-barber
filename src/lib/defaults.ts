@@ -1,5 +1,50 @@
 import type { SiteSettings, Service, PublicContent } from "./domain";
 export const defaultSettings: SiteSettings = {
+  topbarTagline: "PRECISÃO NO CORTE. PERSONALIDADE NO ESTILO.",
+  heroSignatureTitle: "O SEU MELHOR VISUAL COMEÇA AQUI",
+  heroSignatureText: "Precisão. Presença. Personalidade.",
+  servicesEyebrow: "A ARTE DE CUIDAR DO SEU ESTILO",
+  servicesDescription:
+    "Detalhes que fazem a diferença.\nUm cuidado que você sente.",
+  bookingEyebrow: "SEU PRÓXIMO MOMENTO DE CUIDADO",
+  bookingImage: "/images/services.jpg",
+  stepsEyebrow: "SIMPLES, DO INÍCIO AO FIM",
+  stepsTitle: "Seu novo visual em poucos passos.",
+  teamEyebrow: "MÃOS QUE ENTENDEM DE ESTILO",
+  teamDescription: "Mais do que técnica.\nDedicação ao seu melhor visual.",
+  teamIntroImage: "/images/hero.jpg",
+  teamIntroTitle: "O bom corte é só o começo.",
+  teamIntroDescription:
+    "Uma conversa, um cuidado, um momento só seu. Nossa equipe prepara cada detalhe para você sair com mais confiança.",
+  teamIntroNote:
+    "Conheça os profissionais e suas especialidades assim que a agenda estiver disponível.",
+  testimonialsEyebrow: "EXPERIÊNCIAS QUE FICAM",
+  contactEyebrow: "SEU LUGAR É NA NOSSA CADEIRA",
+  contactTitle: "Uma experiência.\nUm estilo. O seu.",
+  contactHeading: "Encontre a Imperial",
+  footerSlogan: "O clássico nunca\nsai de estilo.",
+  headerCta: "Agendar agora",
+  heroPrimaryCta: "Agendar online",
+  heroSecondaryCta: "Nossos serviços",
+  serviceCta: "Reservar horário",
+  bookingCta: "Encontrar meu horário",
+  teamCta: "Agendar atendimento",
+  contactCta: "Quero agendar",
+  steps: [
+    {
+      title: "Escolha o cuidado",
+      description: "Encontre o serviço ideal para você.",
+    },
+    {
+      title: "Reserve seu momento",
+      description: "Escolha o profissional, dia e horário.",
+    },
+    {
+      title: "Pronto. É só chegar.",
+      description: "Confirme os dados e deixe o resto com a gente.",
+    },
+  ],
+
   brandName: "Imperial Barber",
   promotion: "Agende seu próximo momento de cuidado",
   promotionActive: false,

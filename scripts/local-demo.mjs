@@ -48,16 +48,14 @@ const rows = [
 await check(await db.from("services").upsert(rows));
 const pid = "00000000-0000-4000-8000-000000000100";
 await check(
-  await db
-    .from("professionals")
-    .upsert({
-      id: pid,
-      name: "Profissional de demonstração",
-      specialty: "Agenda de exemplo · não representa equipe real",
-      image_url: "/images/hero.jpg",
-      active: true,
-      sort_order: 0,
-    }),
+  await db.from("professionals").upsert({
+    id: pid,
+    name: "Profissional de demonstração",
+    specialty: "Agenda de exemplo · não representa equipe real",
+    image_url: "/images/hero.jpg",
+    active: true,
+    sort_order: 0,
+  }),
 );
 await check(
   await db
@@ -69,16 +67,14 @@ const existing = await check(
 );
 if (!existing.length)
   await check(
-    await db
-      .from("working_hours")
-      .insert(
-        [1, 2, 3, 4, 5, 6].map((weekday) => ({
-          professional_id: pid,
-          weekday,
-          opens: "09:00",
-          closes: "20:00",
-        })),
-      ),
+    await db.from("working_hours").insert(
+      [1, 2, 3, 4, 5, 6].map((weekday) => ({
+        professional_id: pid,
+        weekday,
+        opens: "09:00",
+        closes: "20:00",
+      })),
+    ),
   );
 const r = await check(
   await db.from("site_settings").select("content").single(),
@@ -90,6 +86,23 @@ await check(
       content: {
         ...r.content,
         bookingEnabled: true,
+        bookingImage: "/images/services.jpg",
+        teamIntroImage: "/images/hero.jpg",
+        stepsTitle: "Seu novo visual em poucos passos.",
+        steps: [
+          {
+            title: "Escolha o cuidado",
+            description: "Encontre o serviço ideal para você.",
+          },
+          {
+            title: "Reserve seu momento",
+            description: "Escolha o profissional, dia e horário.",
+          },
+          {
+            title: "Pronto. É só chegar.",
+            description: "Confirme os dados e deixe o resto com a gente.",
+          },
+        ],
         heroTitle: "Mais que um corte, um estilo Imperial.",
         heroDescription:
           "Cortes modernos, barba impecável e uma experiência à altura do seu estilo.",

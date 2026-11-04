@@ -102,7 +102,6 @@ function BookingDialog({
     if (step !== 2 || !ready || !serviceId) return;
     let active = true;
     setLoading(true);
-    setError("");
     setSlots([]);
     api<Slot[]>(
       `/api/slots?serviceId=${serviceId}&professionalId=${professionalId}&date=${date}`,

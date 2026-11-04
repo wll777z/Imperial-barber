@@ -47,6 +47,35 @@ export type ApiResult<T> =
   | { ok: true; data: T }
   | { ok: false; error: { code: ApiErrorCode; message: string } };
 export type SiteSettings = {
+  topbarTagline: string;
+  heroSignatureTitle: string;
+  heroSignatureText: string;
+  servicesEyebrow: string;
+  servicesDescription: string;
+  bookingEyebrow: string;
+  bookingImage: string;
+  stepsEyebrow: string;
+  stepsTitle: string;
+  teamEyebrow: string;
+  teamDescription: string;
+  teamIntroImage: string;
+  teamIntroTitle: string;
+  teamIntroDescription: string;
+  teamIntroNote: string;
+  testimonialsEyebrow: string;
+  contactEyebrow: string;
+  contactTitle: string;
+  contactHeading: string;
+  footerSlogan: string;
+  headerCta: string;
+  heroPrimaryCta: string;
+  heroSecondaryCta: string;
+  serviceCta: string;
+  bookingCta: string;
+  teamCta: string;
+  contactCta: string;
+  steps: { title: string; description: string }[];
+
   brandName: string;
   promotion: string;
   promotionActive: boolean;

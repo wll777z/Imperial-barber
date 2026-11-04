@@ -68,3 +68,5 @@ As fotografias em `public/images` foram geradas para este projeto. Não represen
 Projeto aprovado: [especificação](docs/superpowers/specs/2026-11-03-imperial-barber-design.md). Plano: [implementação](docs/superpowers/plans/2026-11-03-imperial-barber.md).
 
 Para explorar um catálogo local organizado após os testes: `node scripts/local-demo.mjs`. Esse script só aceita loopback, arquiva fixtures com nomes específicos da suíte, preserva o histórico e adiciona cinco serviços e um profissional explicitamente identificado como demonstração. Não o execute para configurar um estabelecimento real.
+
+Relatório da entrega e decisões técnicas: [validação](docs/validation.md). A migração 008 é obrigatória: ela revoga os grants explícitos padrão do Supabase nas funções internas e limita cada RPC à role prevista.

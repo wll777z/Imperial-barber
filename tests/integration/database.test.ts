@@ -29,6 +29,7 @@ beforeAll(async () => {
  do $$begin create role anon nologin;exception when duplicate_object then null;end$$;
  do $$begin create role authenticated nologin;exception when duplicate_object then null;end$$;
  do $$begin create role service_role nologin bypassrls;exception when duplicate_object then null;end$$;
+ alter default privileges in schema public grant execute on functions to anon,authenticated,service_role;
  create schema if not exists auth;create table if not exists auth.users(id uuid primary key);
  create or replace function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
  grant usage on schema auth to anon,authenticated;grant execute on function auth.uid() to anon,authenticated;
@@ -302,7 +303,55 @@ describe("booking database behavior", () => {
       c.release();
     }
   });
-  it('requires explicit customer consent in the privileged booking function',async()=>{const {consent,...withoutConsent}=input();await expect(pool.query('select create_booking($1,$2)',[withoutConsent,'f'.repeat(64)])).rejects.toThrow();});
-  it('allows manual bookings while public online reservations are closed',async()=>{await pool.query(`update site_settings set content=content||'{"bookingEnabled":false}'::jsonb`);const uid='33333333-3333-4333-8333-333333333333';await pool.query('insert into auth.users(id)values($1)on conflict do nothing',[uid]);await pool.query('insert into admin_users(user_id)values($1)',[uid]);const c=await pool.connect();try{await c.query("select set_config('request.jwt.claim.sub',$1,false)",[uid]);await c.query('select admin_create_booking($1)',[input()]);expect((await c.query('select *from bookings')).rowCount).toBe(1);await expect(book(new Date(Date.parse(start)+60*60000).toISOString())).rejects.toThrow();}finally{c.release();}});
+  it("requires explicit customer consent in the privileged booking function", async () => {
+    const { consent, ...withoutConsent } = input();
+    await expect(
+      pool.query("select create_booking($1,$2)", [
+        withoutConsent,
+        "f".repeat(64),
+      ]),
+    ).rejects.toThrow();
+  });
+  it("allows manual bookings while public online reservations are closed", async () => {
+    await pool.query(
+      `update site_settings set content=content||'{"bookingEnabled":false}'::jsonb`,
+    );
+    const uid = "33333333-3333-4333-8333-333333333333";
+    await pool.query(
+      "insert into auth.users(id)values($1)on conflict do nothing",
+      [uid],
+    );
+    await pool.query("insert into admin_users(user_id)values($1)", [uid]);
+    const c = await pool.connect();
+    try {
+      await c.query("select set_config('request.jwt.claim.sub',$1,false)", [
+        uid,
+      ]);
+      await c.query("select admin_create_booking($1)", [input()]);
+      expect((await c.query("select *from bookings")).rowCount).toBe(1);
+      await expect(
+        book(new Date(Date.parse(start) + 60 * 60000).toISOString()),
+      ).rejects.toThrow();
+    } finally {
+      c.release();
+    }
+  });
 
+  it("revokes Supabase-default EXECUTE from privileged functions for public roles", async () => {
+    for (const role of ["anon", "authenticated"])
+      for (const signature of [
+        "save_schedule(uuid,jsonb,jsonb)",
+        "create_booking_internal(jsonb,text,boolean)",
+        "create_booking(jsonb,text)",
+        "manage_booking(text,text,timestamp with time zone)",
+        "consume_limit(text,integer,integer)",
+        "list_booking_slots(text,date)",
+      ]) {
+        const r = await pool.query(
+          "select has_function_privilege($1,$2,'execute') allowed",
+          [role, "public." + signature],
+        );
+        expect(r.rows[0].allowed, role + ":" + signature).toBe(false);
+      }
+  });
 });

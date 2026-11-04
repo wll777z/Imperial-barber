@@ -502,8 +502,7 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, #0c0e0b40, #10120ff2 46%, #10120f 65%),
-    url("/images/services.jpg");
+    linear-gradient(90deg, #0c0e0b40, #10120ff2 46%, #10120f 65%), none;
   background-size: cover;
   background-position: bottom;
 }
@@ -616,7 +615,8 @@ select:focus-visible {
 }
 .team-intro-image {
   min-height: 280px;
-  background: url("/images/hero.jpg") center 40% / cover;
+  background-position: center 40%;
+  background-size: cover;
 }
 .team-intro > div:last-child {
   padding: 36px 50px 36px 0;
@@ -2539,4 +2539,8 @@ footer {
 }
 .service-sheet.service-photo-5 {
   background-position: 100% 100%;
+}
+
+.preline {
+  white-space: pre-line;
 }

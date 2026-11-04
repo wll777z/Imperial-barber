@@ -184,6 +184,87 @@ export default function ContentEditor({
                 />
               </section>
               <section className="admin-card">
+                <h2>Textos auxiliares e chamadas</h2>
+                {text("topbarTagline", "Frase do topo sem promoção", true)}
+                {text("heroSignatureTitle", "Selo abaixo do hero", true)}
+                {text("heroSignatureText", "Descrição do selo", true)}
+                {text("servicesEyebrow", "Chamada acima dos serviços", true)}
+                {text("servicesDescription", "Descrição dos serviços", true)}
+                {text("bookingEyebrow", "Chamada acima do agendamento", true)}
+                {text("stepsEyebrow", "Chamada acima das etapas", true)}
+                {text("stepsTitle", "Título das etapas", true)}
+                {text("teamEyebrow", "Chamada acima da equipe", true)}
+                {text("teamDescription", "Descrição da equipe", true)}
+                {text(
+                  "teamIntroTitle",
+                  "Título da apresentação da equipe",
+                  true,
+                )}
+                {text("teamIntroDescription", "Apresentação da equipe", true)}
+                {text("teamIntroNote", "Nota da apresentação da equipe", true)}
+                {text(
+                  "testimonialsEyebrow",
+                  "Chamada acima dos depoimentos",
+                  true,
+                )}
+                {text("contactEyebrow", "Chamada acima do contato", true)}
+                {text("contactTitle", "Título do contato", true)}
+                {text("contactHeading", "Título da localização", true)}
+                {text("footerSlogan", "Frase de destaque no rodapé", true)}
+                {text("headerCta", "Botão de reserva do cabeçalho", true)}
+                {text("heroPrimaryCta", "Botão principal do hero", true)}
+                {text("heroSecondaryCta", "Botão de serviços do hero", true)}
+                {text("serviceCta", "Botão de reserva dos serviços", true)}
+                {text("bookingCta", "Botão da chamada de agendamento", true)}
+                {text("teamCta", "Botão de reserva da equipe", true)}
+                {text("contactCta", "Botão de reserva do contato", true)}
+              </section>
+              <section className="admin-card">
+                <h2>Fotos e etapas de agendamento</h2>
+                <ImageField
+                  label="Foto da chamada de agendamento"
+                  value={form.bookingImage}
+                  onChange={(v) => patch({ bookingImage: v })}
+                />
+                <ImageField
+                  label="Foto da apresentação da equipe"
+                  value={form.teamIntroImage}
+                  onChange={(v) => patch({ teamIntroImage: v })}
+                />
+                {form.steps.map((step, i) => (
+                  <div className="block-row" key={i}>
+                    <label className="field">
+                      Título da etapa {i + 1}
+                      <input
+                        value={step.title}
+                        onChange={(e) =>
+                          patch({
+                            steps: form.steps.map((v, k) =>
+                              k === i ? { ...v, title: e.target.value } : v,
+                            ),
+                          })
+                        }
+                      />
+                    </label>
+                    <label className="field">
+                      Descrição da etapa {i + 1}
+                      <textarea
+                        value={step.description}
+                        onChange={(e) =>
+                          patch({
+                            steps: form.steps.map((v, k) =>
+                              k === i
+                                ? { ...v, description: e.target.value }
+                                : v,
+                            ),
+                          })
+                        }
+                      />
+                    </label>
+                  </div>
+                ))}
+              </section>{" "}
+              <section className="admin-card">
                 <h2>Depoimentos</h2>
                 {text("testimonialsTitle", "Título dos depoimentos")}
                 {toggle("showTestimonials", "Exibir depoimentos no site")}

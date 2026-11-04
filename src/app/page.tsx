@@ -53,10 +53,10 @@ export default async function Home() {
             <p className="hero-description">{s.heroDescription}</p>
             <div className="hero-actions">
               <BookingLauncher content={c} className="button">
-                Agendar online <ArrowUpRight size={18} />
+                {s.heroPrimaryCta} <ArrowUpRight size={18} />
               </BookingLauncher>
               <a href="#servicos" className="button button-outline">
-                Nossos serviços <ArrowRight size={17} />
+                {s.heroSecondaryCta} <ArrowRight size={17} />
               </a>
             </div>
             <div className="hero-signature">
@@ -64,8 +64,8 @@ export default async function Home() {
                 <Crown size={24} />
               </div>
               <div>
-                <span>O SEU MELHOR VISUAL COMEÇA AQUI</span>
-                <p>Precisão. Presença. Personalidade.</p>
+                <span>{s.heroSignatureTitle}</span>
+                <p>{s.heroSignatureText}</p>
               </div>
             </div>
           </div>
@@ -92,14 +92,10 @@ export default async function Home() {
           <div className="container">
             <div className="section-heading">
               <div>
-                <p className="eyebrow dark">A ARTE DE CUIDAR DO SEU ESTILO</p>
+                <p className="eyebrow dark">{s.servicesEyebrow}</p>
                 <h2>{s.servicesTitle}</h2>
               </div>
-              <p>
-                Detalhes que fazem a diferença.
-                <br />
-                Um cuidado que você sente.
-              </p>
+              <p className="preline">{s.servicesDescription}</p>
             </div>
             {(!c.configured || c.demo) && (
               <p className="catalog-note">
@@ -130,7 +126,7 @@ export default async function Home() {
                       serviceId={service.id}
                       className="service-link"
                     >
-                      Reservar horário <ArrowUpRight size={16} />
+                      {s.serviceCta} <ArrowUpRight size={16} />
                     </BookingLauncher>
                   </div>
                 </article>
@@ -145,49 +141,40 @@ export default async function Home() {
           </div>
         </section>
         <section className="booking-banner" id="agendamento">
-          <div className="booking-banner-photo" />
+          <div
+            className="booking-banner-photo"
+            style={{
+              backgroundImage: `linear-gradient(90deg,#0c0e0b40,#10120ff2 46%,#10120f 65%),url("${s.bookingImage}")`,
+              backgroundSize:
+                s.bookingImage === "/images/services.jpg"
+                  ? "cover,300% 200%"
+                  : "cover,cover",
+              backgroundPosition: "center,right bottom",
+            }}
+          />
           <div className="container booking-banner-inner">
             <div className="booking-copy">
-              <p className="eyebrow">SEU PRÓXIMO MOMENTO DE CUIDADO</p>
+              <p className="eyebrow">{s.bookingEyebrow}</p>
               <h2>{s.bookingTitle}</h2>
               <p>{s.bookingDescription}</p>
               <BookingLauncher content={c} className="button">
-                Encontrar meu horário <ArrowUpRight size={18} />
+                {s.bookingCta} <ArrowUpRight size={18} />
               </BookingLauncher>
             </div>
             <div className="steps-panel">
-              <p className="eyebrow">SIMPLES, DO INÍCIO AO FIM</p>
-              <h3>Seu novo visual em poucos passos.</h3>
+              <p className="eyebrow">{s.stepsEyebrow}</p>
+              <h3>{s.stepsTitle}</h3>
               <div className="how-steps">
-                {[
-                  [
-                    Scissors,
-                    "01",
-                    "Escolha o cuidado",
-                    "Encontre o serviço ideal para você.",
-                  ],
-                  [
-                    CalendarDays,
-                    "02",
-                    "Reserve seu momento",
-                    "Escolha o profissional, dia e horário.",
-                  ],
-                  [
-                    Check,
-                    "03",
-                    "Pronto. É só chegar.",
-                    "Confirme os dados e deixe o resto com a gente.",
-                  ],
-                ].map(([Icon, n, title, text]) => {
-                  const I = Icon as typeof Scissors;
+                {s.steps.map((step, i) => {
+                  const Icon = [Scissors, CalendarDays, Check][i];
                   return (
-                    <div key={String(n)}>
+                    <div key={i}>
                       <div className="step-icon">
-                        <I strokeWidth={1.3} />
-                        <span>{String(n)}</span>
+                        <Icon strokeWidth={1.3} />
+                        <span>0{i + 1}</span>
                       </div>
-                      <h4>{String(title)}</h4>
-                      <p>{String(text)}</p>
+                      <h4>{step.title}</h4>
+                      <p>{step.description}</p>
                     </div>
                   );
                 })}
@@ -200,14 +187,10 @@ export default async function Home() {
             <div className="container">
               <div className="section-heading">
                 <div>
-                  <p className="eyebrow dark">MÃOS QUE ENTENDEM DE ESTILO</p>
+                  <p className="eyebrow dark">{s.teamEyebrow}</p>
                   <h2>{s.teamTitle}</h2>
                 </div>
-                <p>
-                  Mais do que técnica.
-                  <br />
-                  Dedicação ao seu melhor visual.
-                </p>
+                <p className="preline">{s.teamDescription}</p>
               </div>
               {c.professionals.length ? (
                 <div className="team-grid">
@@ -222,7 +205,7 @@ export default async function Home() {
                         <h3>{p.name}</h3>
                         <p>{p.specialty}</p>
                         <BookingLauncher content={c} className="service-link">
-                          Agendar atendimento <ArrowUpRight size={16} />
+                          {s.teamCta} <ArrowUpRight size={16} />
                         </BookingLauncher>
                       </div>
                     </article>
@@ -230,18 +213,15 @@ export default async function Home() {
                 </div>
               ) : (
                 <div className="team-intro">
-                  <div className="team-intro-image" />
+                  <div
+                    className="team-intro-image"
+                    style={{ backgroundImage: `url("${s.teamIntroImage}")` }}
+                  />
                   <div>
                     <Scissors size={36} strokeWidth={1} />
-                    <h3>O bom corte é só o começo.</h3>
-                    <p>
-                      Uma conversa, um cuidado, um momento só seu. Nossa equipe
-                      prepara cada detalhe para você sair com mais confiança.
-                    </p>
-                    <p className="muted">
-                      Conheça os profissionais e suas especialidades assim que a
-                      agenda estiver disponível.
-                    </p>
+                    <h3>{s.teamIntroTitle}</h3>
+                    <p>{s.teamIntroDescription}</p>
+                    <p className="muted">{s.teamIntroNote}</p>
                   </div>
                 </div>
               )}
@@ -251,7 +231,7 @@ export default async function Home() {
         {s.showTestimonials && s.testimonials.length > 0 && (
           <section className="testimonials section">
             <div className="container">
-              <p className="eyebrow">EXPERIÊNCIAS QUE FICAM</p>
+              <p className="eyebrow">{s.testimonialsEyebrow}</p>
               <h2>{s.testimonialsTitle}</h2>
               <div className="testimonial-grid">
                 {s.testimonials.map((t, i) => (
@@ -268,14 +248,10 @@ export default async function Home() {
         <section className="location-section" id="contato">
           <div className="container location-inner">
             <div>
-              <p className="eyebrow">SEU LUGAR É NA NOSSA CADEIRA</p>
-              <h2>
-                Uma experiência.
-                <br />
-                Um estilo. <em>O seu.</em>
-              </h2>
+              <p className="eyebrow">{s.contactEyebrow}</p>
+              <h2 className="preline">{s.contactTitle}</h2>
               <BookingLauncher content={c} className="button">
-                Quero agendar <ArrowUpRight size={18} />
+                {s.contactCta} <ArrowUpRight size={18} />
               </BookingLauncher>
             </div>
             <div className="contact-details">
@@ -287,7 +263,7 @@ export default async function Home() {
                   loading="lazy"
                 />
               )}
-              <h3>Encontre a Imperial</h3>
+              <h3>{s.contactHeading}</h3>
               {s.showLocation && s.address ? (
                 <p>
                   <MapPin />
@@ -365,11 +341,7 @@ export default async function Home() {
           </div>
           <div className="footer-statement">
             <Crown strokeWidth={1} />
-            <p>
-              O clássico nunca
-              <br />
-              sai de <em>estilo.</em>
-            </p>
+            <p className="preline">{s.footerSlogan}</p>
           </div>
         </div>
         <div className="container footer-bottom">

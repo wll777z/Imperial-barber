@@ -42,10 +42,25 @@ export const slotSchema = z
 export const imageUrlSchema = z
   .string()
   .max(2000)
-  .refine(
-    (v) => !v || v.startsWith("/images/") || /^https:\/\//.test(v),
-    "Use uma imagem local ou URL HTTPS.",
-  );
+  .refine((value) => {
+    if (!value || /^\/images\/[A-Za-z0-9_./-]+$/.test(value)) return true;
+    try {
+      const url = new URL(value);
+      if (url.username || url.password) return false;
+      if (url.protocol === "https:") return true;
+      const configured = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      if (!configured) return false;
+      const storage = new URL(configured);
+      return (
+        url.protocol === "http:" &&
+        ["127.0.0.1", "localhost"].includes(storage.hostname) &&
+        url.origin === storage.origin &&
+        url.pathname.startsWith("/storage/v1/object/public/site-images/")
+      );
+    } catch {
+      return false;
+    }
+  }, "Escolha uma imagem válida.");
 export const serviceSchema = z
   .object({
     name: z.string().trim().min(2).max(100),
@@ -96,6 +111,44 @@ export const scheduleSchema = z
   .strict();
 export const settingsSchema = z
   .object({
+    topbarTagline: z.string().max(600),
+    heroSignatureTitle: z.string().max(600),
+    heroSignatureText: z.string().max(600),
+    servicesEyebrow: z.string().max(600),
+    servicesDescription: z.string().max(600),
+    bookingEyebrow: z.string().max(600),
+    bookingImage: imageUrlSchema,
+    stepsEyebrow: z.string().max(600),
+    stepsTitle: z.string().max(600),
+    teamEyebrow: z.string().max(600),
+    teamDescription: z.string().max(600),
+    teamIntroImage: imageUrlSchema,
+    teamIntroTitle: z.string().max(600),
+    teamIntroDescription: z.string().max(600),
+    teamIntroNote: z.string().max(600),
+    testimonialsEyebrow: z.string().max(600),
+    contactEyebrow: z.string().max(600),
+    contactTitle: z.string().max(600),
+    contactHeading: z.string().max(600),
+    footerSlogan: z.string().max(600),
+    headerCta: z.string().max(600),
+    heroPrimaryCta: z.string().max(600),
+    heroSecondaryCta: z.string().max(600),
+    serviceCta: z.string().max(600),
+    bookingCta: z.string().max(600),
+    teamCta: z.string().max(600),
+    contactCta: z.string().max(600),
+    steps: z
+      .array(
+        z
+          .object({
+            title: z.string().min(1).max(100),
+            description: z.string().max(300),
+          })
+          .strict(),
+      )
+      .length(3),
+
     brandName: z.string().min(2).max(80),
     promotion: z.string().max(200),
     promotionActive: z.boolean(),

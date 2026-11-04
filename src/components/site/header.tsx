@@ -13,7 +13,7 @@ export default function Header({ content }: { content: PublicContent }) {
         <span>
           {content.settings.promotionActive
             ? content.settings.promotion
-            : "PRECISÃO NO CORTE. PERSONALIDADE NO ESTILO."}
+            : content.settings.topbarTagline}
         </span>
         <span className="topbar-star">✦</span>
       </div>
@@ -45,7 +45,7 @@ export default function Header({ content }: { content: PublicContent }) {
             ))}
           </nav>
           <BookingLauncher content={content} className="button header-book">
-            Agendar agora <ArrowUpRight size={16} />
+            {content.settings.headerCta} <ArrowUpRight size={16} />
           </BookingLauncher>
         </div>
       </header>

@@ -148,7 +148,9 @@ test("admin login, editable content and prices, uploads and schedule conflicts",
   await expect(
     page.getByRole("heading", { name: "Visão geral" }),
   ).toBeVisible();
-  await expect(page.getByText("Agendamentos hoje", {exact:true})).toBeVisible();
+  await expect(
+    page.getByText("Agendamentos hoje", { exact: true }),
+  ).toBeVisible();
   const manual = await page.request.post("/api/admin/booking-create", {
     headers: { origin: "http://127.0.0.1:3000" },
     data: {
@@ -215,6 +217,69 @@ test("admin login, editable content and prices, uploads and schedule conflicts",
   expect(upload.status()).toBe(200);
   const image = (await upload.json()).data.url;
   expect((await page.request.get(image)).status()).toBe(200);
+  const catalog = (await (await page.request.get("/api/admin/services")).json())
+    .data;
+  const own = catalog.find((s: { id: string }) => s.id === sid);
+  const saved = await page.request.post("/api/admin/services", {
+    headers: { origin: "http://127.0.0.1:3000" },
+    data: {
+      id: sid,
+      data: {
+        name: own.name,
+        description: own.description,
+        priceCents: own.price_cents,
+        durationMinutes: own.duration_minutes,
+        imageUrl: image,
+        active: own.active,
+        sortOrder: own.sort_order,
+      },
+    },
+  });
+  expect(saved.status()).toBe(200);
+  const settings = (
+    await (await page.request.get("/api/admin/settings")).json()
+  ).data;
+  const contentSaved = await page.request.post("/api/admin/settings", {
+    headers: { origin: "http://127.0.0.1:3000" },
+    data: {
+      ...settings,
+      bookingImage: image,
+      teamIntroImage: image,
+      stepsTitle: "Três passos para seu cuidado",
+      steps: [
+        {
+          title: "Escolha seu serviço",
+          description: "Um detalhe pensado para você.",
+        },
+        {
+          title: "Encontre seu horário",
+          description: "Atendimento com hora marcada.",
+        },
+        {
+          title: "Venha viver a experiência",
+          description: "A cadeira espera por você.",
+        },
+      ],
+    },
+  });
+  expect(contentSaved.status()).toBe(200);
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Três passos para seu cuidado" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Um detalhe pensado para você.", { exact: true }),
+  ).toBeVisible();
+  const card = page.locator("article").filter({ hasText: serviceName });
+  await expect(card.locator(".service-photo")).toHaveCSS(
+    "background-size",
+    "cover",
+  );
+  expect(
+    await page
+      .locator(".booking-banner-photo")
+      .evaluate((el) => getComputedStyle(el).backgroundImage),
+  ).toContain(image);
   const conflict = await page.request.post("/api/admin/schedule", {
     headers: { origin: "http://127.0.0.1:3000" },
     data: { professionalId: pid, hours: [], blocks: [] },
@@ -253,7 +318,9 @@ test("admin login, editable content and prices, uploads and schedule conflicts",
     .getByRole("button", { name: "Preencher segunda a sábado, 09h–20h" })
     .click();
   await page.getByRole("button", { name: "Salvar alterações" }).click();
-  await expect(page.getByText("Disponibilidade atualizada.", {exact:true})).toBeVisible();
+  await expect(
+    page.getByText("Disponibilidade atualizada.", { exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Sair da conta" }).click();
   await expect(page).toHaveURL(/admin\/login/);
   expect((await page.request.get("/api/admin/bookings")).status()).toBe(401);
@@ -288,4 +355,83 @@ test("ordinary Auth user cannot enter panel or read private data", async ({
   } finally {
     if (u.data.user) await db.auth.admin.deleteUser(u.data.user.id);
   }
+});
+
+test("real Supabase ACLs deny anonymous execution of privileged RPCs", async () => {
+  const { execFileSync } = await import("node:child_process");
+  const { Pool } = await import("pg");
+  const raw = execFileSync(
+    "node_modules/.bin/supabase",
+    ["status", "--output", "env"],
+    {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        SUPABASE_HOME: process.cwd() + "/.superpowers/supabase",
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
+  const connectionString = raw.match(/^DB_URL="(.*)"$/m)?.[1];
+  if (
+    !connectionString ||
+    !/^postgresql:\/\/[^@]+@(127\.0\.0\.1|localhost):/.test(connectionString)
+  )
+    throw Error("Local database binding required");
+  const pool = new Pool({ connectionString });
+  try {
+    for (const role of ["anon", "authenticated"])
+      for (const fn of [
+        "save_schedule(uuid,jsonb,jsonb)",
+        "create_booking_internal(jsonb,text,boolean)",
+        "create_booking(jsonb,text)",
+        "manage_booking(text,text,timestamp with time zone)",
+        "consume_limit(text,integer,integer)",
+        "list_booking_slots(text,date)",
+      ]) {
+        const r = await pool.query(
+          "select has_function_privilege($1,$2,'execute') allowed",
+          [role, "public." + fn],
+        );
+        expect(r.rows[0].allowed, role + ":" + fn).toBe(false);
+      }
+  } finally {
+    await pool.end();
+  }
+});
+
+test("confirmation conflict stays visible after available slots refresh", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Agendar online", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByText(serviceName, { exact: true }).click();
+  await dialog.getByRole("button", { name: "Próximo" }).click();
+  await dialog.getByText("Profissional de teste", { exact: true }).click();
+  await dialog.getByRole("button", { name: "Próximo" }).click();
+  await dialog.getByLabel("Escolha a data").fill(date);
+  await dialog.locator(".slot").first().click();
+  await dialog.getByLabel("Seu nome").fill("Cliente conflito");
+  await dialog.getByLabel("Telefone / WhatsApp").fill("11966665555");
+  await dialog.getByRole("button", { name: "Próximo" }).click();
+  await dialog.getByRole("checkbox").check();
+  await page.route("**/api/bookings", (route) =>
+    route.fulfill({
+      status: 409,
+      contentType: "application/json",
+      body: JSON.stringify({
+        ok: false,
+        error: { code: "CONFLICT", message: "Horário ocupado. Escolha outro." },
+      }),
+    }),
+  );
+  await dialog.getByRole("button", { name: "Confirmar reserva" }).click();
+  await expect(dialog.getByLabel("Escolha a data")).toBeVisible();
+  await expect(dialog.locator(".slot").first()).toBeVisible();
+  await expect(dialog.getByRole("alert")).toContainText(
+    "Horário ocupado. Escolha outro.",
+  );
 });
